@@ -1,18 +1,38 @@
+/*
+ * RunFunge - A Befunge-93 compatible interpreter with extensions.
+ * Copyright (C) 2009, 2011 Dienes
+ *
+ * This file is part of RunFunge.
+ *
+ * RunFunge is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "Stack.h"
 
-void Stack::Push( Stack::Value const value )
+void Stack::push( Stack::ValueType const value )
 {
-    m_stack.push( value );
+    stack.push( value );
 }
 
-Stack::Value Stack::Pop( void )
+Stack::ValueType Stack::pop( void )
 {
-    Value result;
+    ValueType result;
 
-    if ( m_stack.size() > 0 )
+    if ( stack.size() > 0 )
     {
-        result = m_stack.top();
-        m_stack.pop();
+        result = stack.top();
+        stack.pop();
     }
     else
         result = 0;
@@ -20,24 +40,24 @@ Stack::Value Stack::Pop( void )
     return result;
 }
 
-std::string Stack::PopString( void )
+std::string Stack::popString( void )
 {
-	std::string str;
+    std::string str;
 
-	Value val;
-	while ( ( val = Pop() ) != 0 )
-		str += char( val );
+    ValueType val;
+    while ( ( val = pop() ) != 0 )
+        str += char( val );
 
-	return str;
+    return str;
 }
 
-void Stack::Clear( void )
+void Stack::clear( void )
 {
-	while ( !m_stack.empty() )
-		m_stack.pop();
+    while ( !stack.empty() )
+        stack.pop();
 }
 
-uint32 Stack::Size( void )
+uint32 Stack::size( void )
 {
-	return ( uint32 )( m_stack.size() );
+    return ( uint32 )( stack.size() );
 }

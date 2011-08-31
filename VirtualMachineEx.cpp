@@ -1,3 +1,23 @@
+/*
+ * RunFunge - A Befunge-93 compatible interpreter with extensions.
+ * Copyright (C) 2009, 2011 Dienes
+ *
+ * This file is part of RunFunge.
+ *
+ * RunFunge is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "VirtualMachineEx.h"
 
 #include <cmath>
@@ -7,294 +27,227 @@
 #include <cctype>
 
 VirtualMachineEx::VirtualMachineEx( void ):
-	VirtualMachine(),  stack1( stack ), stack2( new Stack )
+    VirtualMachine(),  stack1( stack ), stack2( new Stack )
 {
-	execute['c'] = func_p( &VirtualMachineEx::_clear_stack );
-	execute['x'] = func_p( &VirtualMachineEx::_coords );
+    execute['c'] = funcP( &VirtualMachineEx::cmdClearStack );
+    execute['x'] = funcP( &VirtualMachineEx::cmdCoords );
 
-	execute['u'] = func_p( &VirtualMachineEx::_conditional_movement_ex );
-	execute['d'] = func_p( &VirtualMachineEx::_conditional_movement_ex );
-	execute['l'] = func_p( &VirtualMachineEx::_conditional_movement_ex );
-	execute['r'] = func_p( &VirtualMachineEx::_conditional_movement_ex );
+    execute['u'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
+    execute['d'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
+    execute['l'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
+    execute['r'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
 
-	execute['w'] = func_p( &VirtualMachineEx::_conditional_movement_compare );
+    execute['w'] = funcP( &VirtualMachineEx::cmdConditionalMovementCompare );
 
-	execute['§'] = func_p( &VirtualMachineEx::_constant_random_movement );
+    execute['§'] = funcP( &VirtualMachineEx::cmdConstantRandomMovement );
 
-	execute['['] = func_p( &VirtualMachineEx::_turn );
-	execute[']'] = func_p( &VirtualMachineEx::_turn );
+    execute['['] = funcP( &VirtualMachineEx::cmdTurn );
+    execute[']'] = funcP( &VirtualMachineEx::cmdTurn );
 
-	execute['t'] = func_p( &VirtualMachineEx::_turn_around );
+    execute['t'] = funcP( &VirtualMachineEx::cmdTurnAround );
 
-	execute['m'] = func_p( &VirtualMachineEx::_move_to );
+    execute['m'] = funcP( &VirtualMachineEx::cmdMoveTo );
 
-	execute['s'] = func_p( &VirtualMachineEx::_swap_stack );
+    execute['s'] = funcP( &VirtualMachineEx::cmdSwapStack );
 
-	execute['S'] = func_p( &VirtualMachineEx::_stack_size );
+    execute['S'] = funcP( &VirtualMachineEx::cmdStackSize );
 
-	execute[';'] = func_p( &VirtualMachineEx::_swap_stack_top );
+    execute[';'] = funcP( &VirtualMachineEx::cmdSwapStackTop );
 
-	execute['A'] = func_p( &VirtualMachineEx::_digits_hex );
-	execute['B'] = func_p( &VirtualMachineEx::_digits_hex );
-	execute['C'] = func_p( &VirtualMachineEx::_digits_hex );
-	execute['D'] = func_p( &VirtualMachineEx::_digits_hex );
-	execute['E'] = func_p( &VirtualMachineEx::_digits_hex );
-	execute['F'] = func_p( &VirtualMachineEx::_digits_hex );
+    execute['A'] = funcP( &VirtualMachineEx::cmdDigitsHex );
+    execute['B'] = funcP( &VirtualMachineEx::cmdDigitsHex );
+    execute['C'] = funcP( &VirtualMachineEx::cmdDigitsHex );
+    execute['D'] = funcP( &VirtualMachineEx::cmdDigitsHex );
+    execute['E'] = funcP( &VirtualMachineEx::cmdDigitsHex );
+    execute['F'] = funcP( &VirtualMachineEx::cmdDigitsHex );
 
-	execute['{'] = func_p( &VirtualMachineEx::_function );
-	execute['}'] = func_p( &VirtualMachineEx::_function );
+    execute['{'] = funcP( &VirtualMachineEx::cmdSubRoutine );
+    execute['}'] = funcP( &VirtualMachineEx::cmdSubRoutine );
 
-	execute['='] = func_p( &VirtualMachineEx::_execute );
+    execute['='] = funcP( &VirtualMachineEx::cmdExecute );
 }
 
 VirtualMachineEx::~VirtualMachineEx( void )
 {
-	delete stack2;
+    delete stack2;
 }
 
-bool VirtualMachineEx::_clear_stack( char c )
+bool VirtualMachineEx::cmdClearStack( char c )
 {
-	stack->Clear();
+    stack->clear();
 
-	return true;
+    return true;
 }
 
-bool VirtualMachineEx::_coords( char c )
+bool VirtualMachineEx::cmdCoords( char c )
 {
-	stack->Push( ip.pos.x );
-	stack->Push( ip.pos.y );
+    stack->push( ip.pos.x );
+    stack->push( ip.pos.y );
 
-	return true;
+    return true;
 }
 
-bool VirtualMachineEx::_conditional_movement_ex( char c )
+bool VirtualMachineEx::cmdConditionalMovementEx( char c )
 {
-	if ( !stack->Pop() )
-	{
-		switch ( c )
-		{
-			case 'u':
-				ip.dir.x = 0; ip.dir.y = -1; break;
-
-			case 'd':
-				ip.dir.x = 0; ip.dir.y = 1; break;
-
-			case 'l':
-				ip.dir.x = -1; ip.dir.y = 0; break;
-
-			case 'r':
-				ip.dir.x = 1; ip.dir.y = 0;
-		}
-	}
-
-	return true;
-}
-
-bool VirtualMachineEx::_conditional_movement_compare( char c )
-{
-	Stack::Value b = stack->Pop(), a = stack->Pop();
-
-	if ( a < b )
-		return _turn( '[' );
-	else if ( a > b )
-		return _turn( ']' );
-	else
-		return true;
-}
-
-bool VirtualMachineEx::_constant_random_movement( char c )
-{
-	uint16 rand_dir = std::rand() % 4;
-
-	switch ( rand_dir )
-	{
-		case 0:
-			set_cmd_at( ip.pos.x, ip.pos.y, '<' ); break;
-
-		case 1:
-			set_cmd_at( ip.pos.x, ip.pos.y, '>' ); break;
-
-		case 2:
-			set_cmd_at( ip.pos.x, ip.pos.y, 'v' ); break;
-
-		case 3:
-			set_cmd_at( ip.pos.x, ip.pos.y, '^' );
-	}
-
-	return false;
-}
-
-bool VirtualMachineEx::_turn( char c )
-{
-	/*
-	double	direction = c == '[' ? ( M_PI_2 * -1.0 ) : M_PI_2,
-			atan_of_dir = std::atan2( double( ip.dir.y ), double( ip.dir.x ) );
-
-	ip.dir.x = ( int64 )( std::cos( atan_of_dir + direction ) );
-	ip.dir.y = ( int64 )( std::sin( atan_of_dir + direction ) );
-	*/
-
-	Vector<int16> old_dir = ip.dir;
-
-	if ( c == '[' )
-	{
-		ip.dir.x = old_dir.y;
-		ip.dir.y = -old_dir.x;
-	}
-	else if ( c == ']' )
-	{
-		ip.dir.x = -old_dir.y;
-		ip.dir.y = old_dir.x;
-	}
-
-	return true;
-}
-
-bool VirtualMachineEx::_turn_around( char c )
-{
-	ip.dir.x *= -1;
-	ip.dir.y *= -1;
-
-	return true;
-}
-
-bool VirtualMachineEx::_move_to( char c )
-{
-	ip.pos.y = stack->Pop();
-	ip.pos.x = stack->Pop();
-
-	return false;
-}
-
-bool VirtualMachineEx::_swap_stack( char c )
-{
-	stack = stack == stack1 ? stack2 : stack1;
-
-	return true;
-}
-
-bool VirtualMachineEx::_stack_size( char c )
-{
-	stack->Push( Stack::Value( stack->Size() ) );
-
-	return true;
-}
-
-bool VirtualMachineEx::_swap_stack_top( char c )
-{
-	Stack	*inactive_stack = stack == stack1 ? stack2 : stack1;
-
-	inactive_stack->Push( stack->Pop() );
-
-	return true;
-}
-
-bool VirtualMachineEx::_digits_hex( char c )
-{
-	stack->Push( Stack::Value( c - 'A' + 10 ) );
-
-	return true;
-}
-
-bool VirtualMachineEx::_function( char c )
-{
-	bool proceed = true;
-
-	switch ( c )
-	{
-		case '{':
-			callstack.push( ip );
-
-			ip.pos.y = stack->Pop();
-			ip.pos.x = stack->Pop();
-
-			proceed = false;
-
-			break;
-
-		case '}':
-			if ( !callstack.empty() )
-			{
-				ip = callstack.top();
-
-				callstack.pop();
-			}
-	}
-
-	return proceed;
-}
-
-bool VirtualMachineEx::_execute( char c )
-{
-	std::string cmd = stack->PopString();
-
-	stack->Push( Stack::Value( system( cmd.c_str() ) ) );
-
-	return true;
-}
-/*
-void VirtualMachineEx::LoadCode( const std::string &filename )
-{
-    std::ifstream file;
-    uint16 x = 0, y = 0;
-    char cmd;
-
-    file.open( filename.c_str() );
-
-    while ( file.good() )
+    if ( !stack->pop() )
     {
-    	file.get( cmd );
+        switch ( c )
+        {
+            case 'u':
+                ip.dir.x = 0; ip.dir.y = -1; break;
 
-    	if ( cmd == '\n' )
-    	{
-    		x = 0;
-    		++y;
-    	}
-    	else
-    	{
-    		if ( !std::isspace( cmd ) )
-    		{
-    			set_cmd_at( x, y, cmd );
-    		}
+            case 'd':
+                ip.dir.x = 0; ip.dir.y = 1; break;
 
-    		++x;
-    	}
+            case 'l':
+                ip.dir.x = -1; ip.dir.y = 0; break;
+
+            case 'r':
+                ip.dir.x = 1; ip.dir.y = 0;
+        }
     }
 
-    file.close();
+    return true;
 }
-*/
 
-int32 VirtualMachineEx::Run( void )
+bool VirtualMachineEx::cmdConditionalMovementCompare( char c )
 {
-	VirtualMachine::Run();
+    Stack::ValueType b = stack->pop(), a = stack->pop();
 
-	return int32( stack->Pop() );
+    if ( a < b )
+        return cmdTurn( '[' );
+    else if ( a > b )
+        return cmdTurn( ']' );
+    else
+        return true;
 }
 
-/*
-char VirtualMachineEx::get_cmd_at( uint16 x, uint16 y )
+bool VirtualMachineEx::cmdConstantRandomMovement( char c )
 {
-	char cmd = ' ';
+    uint16 randDir = std::rand() % 4;
 
-	std::map<uint16, std::map<uint16, char> >::iterator it_x = code.find( x );
+    switch ( randDir )
+    {
+        case 0:
+            setCmdAt( ip.pos.x, ip.pos.y, '<' ); break;
 
-	if ( it_x != code.end() )
-	{
-		std::map<uint16, char>::iterator it_y = it_x->second.find( y );
+        case 1:
+            setCmdAt( ip.pos.x, ip.pos.y, '>' ); break;
 
-		if ( it_y != it_x->second.end() )
-		{
-			cmd = it_y->second;
-		}
-	}
+        case 2:
+            setCmdAt( ip.pos.x, ip.pos.y, 'v' ); break;
 
-	return cmd;
+        case 3:
+            setCmdAt( ip.pos.x, ip.pos.y, '^' );
+    }
+
+    return false;
 }
 
-void VirtualMachineEx::set_cmd_at( uint16 x, uint16 y, char c )
+bool VirtualMachineEx::cmdTurn( char c )
 {
-	code[x];
-	code[x][y] = c;
+    Vector<int16> oldDir = ip.dir;
+
+    if ( c == '[' )
+    {
+        ip.dir.x = oldDir.y;
+        ip.dir.y = -oldDir.x;
+    }
+    else if ( c == ']' )
+    {
+        ip.dir.x = -oldDir.y;
+        ip.dir.y = oldDir.x;
+    }
+
+    return true;
 }
-*/
+
+bool VirtualMachineEx::cmdTurnAround( char c )
+{
+    ip.dir.x *= -1;
+    ip.dir.y *= -1;
+
+    return true;
+}
+
+bool VirtualMachineEx::cmdMoveTo( char c )
+{
+    ip.pos.y = stack->pop();
+    ip.pos.x = stack->pop();
+
+    return false;
+}
+
+bool VirtualMachineEx::cmdSwapStack( char c )
+{
+    stack = stack == stack1 ? stack2 : stack1;
+
+    return true;
+}
+
+bool VirtualMachineEx::cmdStackSize( char c )
+{
+    stack->push( Stack::ValueType( stack->size() ) );
+
+    return true;
+}
+
+bool VirtualMachineEx::cmdSwapStackTop( char c )
+{
+    Stack *inactiveStack = stack == stack1 ? stack2 : stack1;
+
+    inactiveStack->push( stack->pop() );
+
+    return true;
+}
+
+bool VirtualMachineEx::cmdDigitsHex( char c )
+{
+    stack->push( Stack::ValueType( c - 'A' + 10 ) );
+
+    return true;
+}
+
+bool VirtualMachineEx::cmdSubRoutine( char c )
+{
+    bool proceed = true;
+
+    switch ( c )
+    {
+        case '{':
+            callstack.push( ip );
+
+            ip.pos.y = stack->pop();
+            ip.pos.x = stack->pop();
+
+            proceed = false;
+
+            break;
+
+        case '}':
+            if ( !callstack.empty() )
+            {
+                ip = callstack.top();
+
+                callstack.pop();
+            }
+    }
+
+    return proceed;
+}
+
+bool VirtualMachineEx::cmdExecute( char c )
+{
+    std::string cmd = stack->popString();
+
+    stack->push( Stack::ValueType( std::system( cmd.c_str() ) ) );
+
+    return true;
+}
+
+int32 VirtualMachineEx::run( void )
+{
+    VirtualMachine::run();
+
+    return int32( stack->pop() );
+}

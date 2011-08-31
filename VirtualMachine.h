@@ -1,3 +1,23 @@
+/*
+ * RunFunge - A Befunge-93 compatible interpreter with extensions.
+ * Copyright (C) 2009, 2011 Dienes
+ *
+ * This file is part of RunFunge.
+ *
+ * RunFunge is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef VIRTUALMACHINE_H
 #define VIRTUALMACHINE_H
 
@@ -7,67 +27,67 @@
 #include "Stack.h"
 #include "Types.h"
 
-#define CODE_WIDTH	80
-#define CODE_HEIGHT	25
-
-template<typename T>
-class Vector
-{
-	public:
-		T x, y;
-
-		Vector( T x, T y ): x( x ), y( y ) { }
-};
-
-class IP
-{
-	public:
-		Vector<int16> pos;
-		Vector<int16> dir;
-
-		IP( void ): pos( 0, 0 ), dir( 1, 0 ) { }
-
-		void Move( void );
-};
-
 class VirtualMachine
 {
-	private:
-		char					code[CODE_WIDTH][CODE_HEIGHT];
+    protected:
+        template<typename T>
+        class Vector
+        {
+            public:
+                T x, y;
 
-	protected:
-		typedef bool ( VirtualMachine::*func_p )( char );
+                Vector( T x, T y ): x( x ), y( y ) { }
+        };
 
-		bool					_movement( char c );
-		bool					_conditional_movement( char c );
-		bool					_random_movement( char c );
-		bool					_math( char c );
-		bool					_logical( char c );
-		bool					_stack_manipulation( char c );
-		bool					_output( char c );
-		bool					_input( char c );
-		bool					_skip( char c );
-		bool					_code_manipulation( char c );
-		bool					_digits( char c );
+        class IP
+        {
+            public:
+                Vector<int16> pos;
+                Vector<int16> dir;
 
-		std::map<char, func_p>	execute;
+                IP( void ): pos( 0, 0 ), dir( 1, 0 ) { }
 
-		Stack					*stack;
+                void move( void );
+        };
 
-		IP						ip;
+    protected:
+        static const int16      CODE_WIDTH = 80, CODE_HEIGHT = 25;
 
-		bool					string_mode;
+        char                    code[CODE_WIDTH][CODE_HEIGHT];
 
-		virtual char			get_cmd_at( uint16 x, uint16 y );
-		virtual void			set_cmd_at( uint16 x, uint16 y, char c );
+    protected:
+        typedef bool ( VirtualMachine::*funcP )( char );
 
-	public:
-		/*ctor*/				VirtualMachine( void );
-		/*dtor*/ virtual		~VirtualMachine( void );
+        bool                    cmdMovement( char c );
+        bool                    cmdConditionalMovement( char c );
+        bool                    cmdRandomMovement( char c );
+        bool                    cmdMath( char c );
+        bool                    cmdLogical( char c );
+        bool                    cmdStackManipulation( char c );
+        bool                    cmdOutput( char c );
+        bool                    cmdInput( char c );
+        bool                    cmdSkip( char c );
+        bool                    cmdCodeManipulation( char c );
+        bool                    cmdDigits( char c );
 
-		virtual void			LoadCode( const std::string &filename );
+        std::map<char, funcP>   execute;
 
-		virtual int32			Run( void );
+        Stack                   *stack;
+
+        IP                      ip;
+
+        bool                    stringMode;
+
+        char                    getCmdAt( uint16 x, uint16 y );
+        void                    setCmdAt( uint16 x, uint16 y, char c );
+
+    public:
+                                VirtualMachine( void );
+        virtual                 ~VirtualMachine( void );
+
+        virtual void            loadCode( const std::string &filename );
+
+        virtual int32           run( void );
 };
 
 #endif // VIRTUALMACHINE_H
