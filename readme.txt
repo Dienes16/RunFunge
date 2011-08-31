@@ -2,6 +2,8 @@ Usage: RunFunge.exe <file> [-bf93]
 
 -bf93 deactivates all extensions
 
+Note: In extended mode, there are two separate stacks to operate on. See "s" command for swapping them.
+
 
 Befunge-93 Commands:
 
@@ -52,9 +54,8 @@ s	Swap Stack: Switches the active stack (there are 2 stacks)
 S	Stack Size: Pushes the number of elements in the stack (not counting the new one it pushes)
 ;	Swap Stack Top: Pops a value from the active stack and pushes it on the inactive stack
 x	Save Coordinates: Puts current X and Y position on the stack
-{	Call Function: Pops Y and X and moves IP to X/Y keeping direction
+{	Call Sub Routine: Pops Y and X and moves IP to X/Y keeping direction
 	(next step is interpretation of the command at X/Y)
 }	Return: Restores position and direction of last {-call
 =	Execute: Pops a complete string, executes it as a system command and pushes its return value on the stack
-(i)	Counter: 
 @	Quit With Return Value: Pops a value and quits program returning that value (0 = no error)

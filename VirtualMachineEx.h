@@ -1,50 +1,58 @@
+/*
+ * RunFunge - A Befunge-93 compatible interpreter with extensions.
+ * Copyright (C) 2009, 2011 Dienes
+ *
+ * This file is part of RunFunge.
+ *
+ * RunFunge is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef VIRTUALMACHINEEX_H
 #define VIRTUALMACHINEEX_H
 
 #include "VirtualMachine.h"
 
 #include <stack>
-#include <map>
-
-#include "Types.h"
 
 class VirtualMachineEx: public VirtualMachine
 {
-	private:
-		//std::map<uint16, std::map<uint16, char> > code;
-		char						code[CODE_WIDTH][CODE_HEIGHT];
+    protected:
 
-	protected:
+        bool            cmdClearStack( char c );
+        bool            cmdCoords( char c );
+        bool            cmdConditionalMovementEx( char c );
+        bool            cmdConditionalMovementCompare( char c );
+        bool            cmdConstantRandomMovement( char c );
+        bool            cmdTurn( char c );
+        bool            cmdTurnAround( char c );
+        bool            cmdMoveTo( char c );
+        bool            cmdSwapStack( char c );
+        bool            cmdStackSize( char c );
+        bool            cmdSwapStackTop( char c );
+        bool            cmdDigitsHex( char c );
+        bool            cmdSubRoutine( char c );
+        bool            cmdExecute( char c );
 
-		bool						_clear_stack( char c );
-		bool						_coords( char c );
-		bool						_conditional_movement_ex( char c );
-		bool						_conditional_movement_compare( char c );
-		bool						_constant_random_movement( char c );
-		bool						_turn( char c );
-		bool						_turn_around( char c );
-		bool						_move_to( char c );
-		bool						_swap_stack( char c );
-		bool						_stack_size( char c );
-		bool						_swap_stack_top( char c );
-		bool						_digits_hex( char c );
-		bool						_function( char c );
-		bool						_execute( char c );
+        Stack           *stack1, *stack2;
 
-		Stack						*stack1, *stack2;
+        std::stack<IP>  callstack;
 
-		std::stack<IP>				callstack;
+    public:
+                        VirtualMachineEx( void );
+                        ~VirtualMachineEx( void );
 
-		//virtual char				get_cmd_at( uint16 x, uint16 y );
-		//virtual void				set_cmd_at( uint16 x, uint16 y, char c );
-
-	public:
-		/*ctor*/					VirtualMachineEx( void );
-		/*dtor*/ virtual			~VirtualMachineEx( void );
-
-		//virtual void				LoadCode( const std::string &filename );
-
-		virtual int32				Run( void );
+        int32           run( void );
 };
 
 #endif // VIRTUALMACHINEEX_H

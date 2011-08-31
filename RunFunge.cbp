@@ -33,7 +33,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="PrecisionTimer.h" />
 		<Unit filename="Stack.cpp" />
 		<Unit filename="Stack.h" />
 		<Unit filename="Types.h" />
