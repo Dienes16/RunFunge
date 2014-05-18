@@ -23,7 +23,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #ifndef VIRTUALMACHINEEX_H
 #define VIRTUALMACHINEEX_H
 
-#include "VirtualMachine.h"
+#include "VirtualMachine.hpp"
 
 #include <stack>
 

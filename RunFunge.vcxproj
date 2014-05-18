@@ -115,10 +115,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Stack.h" />
-    <ClInclude Include="Types.h" />
-    <ClInclude Include="VirtualMachine.h" />
-    <ClInclude Include="VirtualMachineEx.h" />
+    <ClInclude Include="Stack.hpp" />
+    <ClInclude Include="Types.hpp" />
+    <ClInclude Include="VirtualMachine.hpp" />
+    <ClInclude Include="VirtualMachineEx.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

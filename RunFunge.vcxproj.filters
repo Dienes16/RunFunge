@@ -15,16 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Stack.h">
+    <ClInclude Include="Stack.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Types.h">
+    <ClInclude Include="Types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VirtualMachine.h">
+    <ClInclude Include="VirtualMachine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VirtualMachineEx.h">
+    <ClInclude Include="VirtualMachineEx.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

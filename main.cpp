@@ -24,7 +24,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <cstring>
 #include <cstdlib>
 
-#include "VirtualMachineEx.h"
+#include "VirtualMachineEx.hpp"
 
 int main( int argc, char **argv )
 {

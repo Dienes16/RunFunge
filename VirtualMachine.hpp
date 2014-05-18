@@ -26,8 +26,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <map>
 #include <string>
 
-#include "Stack.h"
-#include "Types.h"
+#include "Stack.hpp"
+#include "Types.hpp"
 
 class VirtualMachine
 {

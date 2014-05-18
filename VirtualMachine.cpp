@@ -20,7 +20,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 Author E-Mail: dienes16 [at] googlemail [dot] com
 */
 
-#include "VirtualMachine.h"
+#include "VirtualMachine.hpp"
 
 #include <cstdlib>
 #include <ctime>
