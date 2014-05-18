@@ -26,7 +26,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <stack>
 #include <string>
 
-#include "Types.h"
+#include "Types.hpp"
 
 class Stack
 {
