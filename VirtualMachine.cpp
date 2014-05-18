@@ -340,7 +340,7 @@ void VirtualMachine::loadCode( const std::string &filename )
 
 int32 VirtualMachine::run( void )
 {
-    char cmd, prevCmd;
+    char cmd = ' ', prevCmd;
     std::map<char, funcP>::iterator cmdIt;
     bool proceed, doLog = true;
     int32 result = 0;
