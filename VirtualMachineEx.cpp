@@ -76,14 +76,14 @@ VirtualMachineEx::~VirtualMachineEx()
    delete stack2;
 }
 
-bool VirtualMachineEx::cmdClearStack(char c)
+bool VirtualMachineEx::cmdClearStack(char /*c*/)
 {
    stack->clear();
 
    return true;
 }
 
-bool VirtualMachineEx::cmdCoords(char c)
+bool VirtualMachineEx::cmdCoords(char /*c*/)
 {
    stack->push(ip.pos.x);
    stack->push(ip.pos.y);
@@ -121,7 +121,7 @@ bool VirtualMachineEx::cmdConditionalMovementEx(char c)
    return true;
 }
 
-bool VirtualMachineEx::cmdConditionalMovementCompare(char c)
+bool VirtualMachineEx::cmdConditionalMovementCompare(char /*c*/)
 {
    Stack::ValueType b = stack->pop();
    Stack::ValueType a = stack->pop();
@@ -134,7 +134,7 @@ bool VirtualMachineEx::cmdConditionalMovementCompare(char c)
       return true;
 }
 
-bool VirtualMachineEx::cmdConstantRandomMovement(char c)
+bool VirtualMachineEx::cmdConstantRandomMovement(char /*c*/)
 {
    std::uint16_t randDir = std::rand() % 4;
 
@@ -177,7 +177,7 @@ bool VirtualMachineEx::cmdTurn(char c)
    return true;
 }
 
-bool VirtualMachineEx::cmdTurnAround(char c)
+bool VirtualMachineEx::cmdTurnAround(char /*c*/)
 {
    ip.dir.x *= -1;
    ip.dir.y *= -1;
@@ -185,29 +185,29 @@ bool VirtualMachineEx::cmdTurnAround(char c)
    return true;
 }
 
-bool VirtualMachineEx::cmdMoveTo(char c)
+bool VirtualMachineEx::cmdMoveTo(char /*c*/)
 {
-   ip.pos.y = stack->pop();
-   ip.pos.x = stack->pop();
+   ip.pos.y = static_cast<std::uint16_t>(stack->pop());
+   ip.pos.x = static_cast<std::uint16_t>(stack->pop());
 
    return false;
 }
 
-bool VirtualMachineEx::cmdSwapStack(char c)
+bool VirtualMachineEx::cmdSwapStack(char /*c*/)
 {
    stack = (stack == stack1) ? stack2 : stack1;
 
    return true;
 }
 
-bool VirtualMachineEx::cmdStackSize(char c)
+bool VirtualMachineEx::cmdStackSize(char /*c*/)
 {
    stack->push(Stack::ValueType(stack->size()));
 
    return true;
 }
 
-bool VirtualMachineEx::cmdSwapStackTop(char c)
+bool VirtualMachineEx::cmdSwapStackTop(char /*c*/)
 {
    Stack* inactiveStack = (stack == stack1) ? stack2 : stack1;
 
@@ -232,8 +232,8 @@ bool VirtualMachineEx::cmdSubRoutine(char c)
    case '{':
       callstack.push(ip);
 
-      ip.pos.y = stack->pop();
-      ip.pos.x = stack->pop();
+      ip.pos.y = static_cast<std::uint16_t>(stack->pop());
+      ip.pos.x = static_cast<std::uint16_t>(stack->pop());
 
       proceed = false;
 
@@ -251,7 +251,7 @@ bool VirtualMachineEx::cmdSubRoutine(char c)
    return proceed;
 }
 
-bool VirtualMachineEx::cmdExecute(char c)
+bool VirtualMachineEx::cmdExecute(char /*c*/)
 {
    std::string cmd = stack->popString();
 
