@@ -26,26 +26,26 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include "VirtualMachineEx.hpp"
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    if ( argc <= 1 )
-    {
-        std::cerr << "Usage: RunFunge.exe <file> [-bf93]";
-        return EXIT_FAILURE;
-    }
+   if (argc <= 1)
+   {
+      std::cerr << "Usage: RunFunge.exe <file> [-bf93]";
+      return EXIT_FAILURE;
+   }
 
-    VirtualMachine* virtualMachine;
+   VirtualMachine* virtualMachine;
 
-    if ( argc > 2 && !std::strcmp( argv[2], "-bf93" ) )
-        virtualMachine = new VirtualMachine;
-    else
-        virtualMachine = new VirtualMachineEx;
+   if (argc > 2 && !std::strcmp(argv[2], "-bf93"))
+      virtualMachine = new VirtualMachine;
+   else
+      virtualMachine = new VirtualMachineEx;
 
-    virtualMachine->loadCode( argv[1] );
+   virtualMachine->loadCode(argv[1]);
 
-    int result = virtualMachine->run();
+   int result = virtualMachine->run();
 
-    delete virtualMachine;
+   delete virtualMachine;
 
-    return result;
+   return result;
 }

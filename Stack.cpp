@@ -22,44 +22,47 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include "Stack.hpp"
 
-void Stack::push( Stack::ValueType const value )
+void Stack::push(const Stack::ValueType value)
 {
-    stack.push( value );
+   stack.push(value);
 }
 
-Stack::ValueType Stack::pop( void )
+Stack::ValueType Stack::pop()
 {
-    ValueType result;
+   ValueType result;
 
-    if ( stack.size() > 0 )
-    {
-        result = stack.top();
-        stack.pop();
-    }
-    else
-        result = 0;
+   if (stack.size() > 0)
+   {
+      result = stack.top();
+      stack.pop();
+   }
+   else
+   {
+      result = 0;
+   }
 
-    return result;
+   return result;
 }
 
-std::string Stack::popString( void )
+std::string Stack::popString()
 {
-    std::string str;
+   std::string str;
 
-    ValueType val;
-    while ( ( val = pop() ) != 0 )
-        str += char( val );
+   ValueType val;
 
-    return str;
+   while ((val = pop()) != 0)
+      str += char(val);
+
+   return str;
 }
 
-void Stack::clear( void )
+void Stack::clear()
 {
-    while ( !stack.empty() )
-        stack.pop();
+   while (!stack.empty())
+      stack.pop();
 }
 
-std::uint32_t Stack::size(void)
+std::uint32_t Stack::size()
 {
-    return ( std::uint32_t )(stack.size());
+   return (std::uint32_t)(stack.size());
 }
