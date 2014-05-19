@@ -303,7 +303,7 @@ bool VirtualMachine::cmdDigits( char c )
 void VirtualMachine::loadCode( const std::string &filename )
 {
     std::ifstream file;
-    uint16 x, y;
+    std::uint16_t x, y;
     char cmd;
     bool done = false;
 
@@ -338,12 +338,12 @@ void VirtualMachine::loadCode( const std::string &filename )
     file.close();
 }
 
-int32 VirtualMachine::run( void )
+std::int32_t VirtualMachine::run(void)
 {
     char cmd = ' ', prevCmd;
     std::map<char, funcP>::iterator cmdIt;
     bool proceed, doLog = true;
-    int32 result = 0;
+    std::int32_t result = 0;
 
     std::ofstream logfile;
     logfile.open( "logfile.txt", std::ios::out );
@@ -380,11 +380,11 @@ int32 VirtualMachine::run( void )
     return result;
 }
 
-char VirtualMachine::getCmdAt( uint16 x, uint16 y )
+char VirtualMachine::getCmdAt( std::uint16_t x, std::uint16_t y)
 {
     return code[x][y];
 }
-void VirtualMachine::setCmdAt( uint16 x, uint16 y, char c )
+void VirtualMachine::setCmdAt( std::uint16_t x, std::uint16_t y, char c)
 {
     code[x][y] = c;
 }
