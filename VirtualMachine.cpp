@@ -48,7 +48,7 @@ VirtualMachine::VirtualMachine()
    : stack(new Stack)
    , stringMode(false)
 {
-   std::srand(std::time(NULL));
+   std::srand(static_cast<unsigned int>(std::time(NULL)));
 
    execute['<'] = &VirtualMachine::cmdMovement;
    execute['>'] = &VirtualMachine::cmdMovement;
@@ -147,7 +147,7 @@ bool VirtualMachine::cmdConditionalMovement(char c)
    return true;
 }
 
-bool VirtualMachine::cmdRandomMovement(char c)
+bool VirtualMachine::cmdRandomMovement(char /*c*/)
 {
    short randDir = std::rand() % 4;
 
@@ -294,7 +294,7 @@ bool VirtualMachine::cmdInput(char c)
    return true;
 }
 
-bool VirtualMachine::cmdSkip(char c)
+bool VirtualMachine::cmdSkip(char /*c*/)
 {
    ip.move();
 
@@ -309,11 +309,11 @@ bool VirtualMachine::cmdCodeManipulation(char c)
    switch (c)
    {
    case 'g':
-      stack->push(getCmdAt(x, y));
+      stack->push(getCmdAt(static_cast<std::uint16_t>(x), static_cast<std::uint16_t>(y)));
       break;
 
    case 'p':
-      setCmdAt(x, y, char(stack->pop()));
+      setCmdAt(static_cast<std::uint16_t>(x), static_cast<std::uint16_t>(y), static_cast<char>(stack->pop()));
    }
 
    return true;
@@ -392,7 +392,7 @@ std::int32_t VirtualMachine::run()
       proceed = true;
 
       if (cmd == '"')
-         stringMode = 1 - stringMode;
+         stringMode = !stringMode;
       else if (stringMode)
          stack->push(cmd);
       else if (cmd == '@')
