@@ -25,9 +25,9 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include <map>
 #include <string>
+#include <cstdint>
 
 #include "Stack.hpp"
-#include "Types.hpp"
 
 class VirtualMachine
 {
@@ -44,8 +44,8 @@ class VirtualMachine
         class IP
         {
             public:
-                Vector<int16> pos;
-                Vector<int16> dir;
+                Vector<std::int16_t> pos;
+                Vector<std::int16_t> dir;
 
                 IP( void ): pos( 0, 0 ), dir( 1, 0 ) { }
 
@@ -53,7 +53,7 @@ class VirtualMachine
         };
 
     protected:
-        static const int16      CODE_WIDTH = 80, CODE_HEIGHT = 25;
+        static const std::int16_t CODE_WIDTH = 80, CODE_HEIGHT = 25;
 
         char                    code[CODE_WIDTH][CODE_HEIGHT];
 
@@ -80,8 +80,8 @@ class VirtualMachine
 
         bool                    stringMode;
 
-        char                    getCmdAt( uint16 x, uint16 y );
-        void                    setCmdAt( uint16 x, uint16 y, char c );
+        char                    getCmdAt( std::uint16_t x, std::uint16_t y);
+        void                    setCmdAt( std::uint16_t x, std::uint16_t y, char c);
 
     public:
                                 VirtualMachine( void );
@@ -89,7 +89,7 @@ class VirtualMachine
 
         virtual void            loadCode( const std::string &filename );
 
-        virtual int32           run( void );
+        virtual std::int32_t    run(void);
 };
 
 #endif // VIRTUALMACHINE_H

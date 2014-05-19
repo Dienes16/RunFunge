@@ -25,13 +25,12 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include <stack>
 #include <string>
-
-#include "Types.hpp"
+#include <cstdint>
 
 class Stack
 {
     public:
-        typedef int64           ValueType;
+        typedef std::int64_t    ValueType;
 
     private:
         std::stack<ValueType>   stack;
@@ -43,7 +42,7 @@ class Stack
 
         void                    clear( void );
 
-        uint32                  size( void );
+        std::uint32_t           size(void);
 };
 
 #endif // STACK_H

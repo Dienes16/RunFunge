@@ -26,6 +26,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include "VirtualMachine.hpp"
 
 #include <stack>
+#include <cstdint>
 
 class VirtualMachineEx: public VirtualMachine
 {
@@ -54,7 +55,7 @@ class VirtualMachineEx: public VirtualMachine
                         VirtualMachineEx( void );
                         ~VirtualMachineEx( void );
 
-        int32           run( void );
+        std::int32_t    run(void);
 };
 
 #endif // VIRTUALMACHINEEX_H

@@ -59,7 +59,7 @@ void Stack::clear( void )
         stack.pop();
 }
 
-uint32 Stack::size( void )
+std::uint32_t Stack::size(void)
 {
-    return ( uint32 )( stack.size() );
+    return ( std::uint32_t )(stack.size());
 }

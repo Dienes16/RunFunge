@@ -18,9 +18,6 @@
     <ClInclude Include="Stack.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Types.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VirtualMachine.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

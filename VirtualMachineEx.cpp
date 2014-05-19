@@ -126,7 +126,7 @@ bool VirtualMachineEx::cmdConditionalMovementCompare( char c )
 
 bool VirtualMachineEx::cmdConstantRandomMovement( char c )
 {
-    uint16 randDir = std::rand() % 4;
+    std::uint16_t randDir = std::rand() % 4;
 
     switch ( randDir )
     {
@@ -148,7 +148,7 @@ bool VirtualMachineEx::cmdConstantRandomMovement( char c )
 
 bool VirtualMachineEx::cmdTurn( char c )
 {
-    Vector<int16> oldDir = ip.dir;
+    Vector<std::int16_t> oldDir = ip.dir;
 
     if ( c == '[' )
     {
@@ -247,9 +247,9 @@ bool VirtualMachineEx::cmdExecute( char c )
     return true;
 }
 
-int32 VirtualMachineEx::run( void )
+std::int32_t VirtualMachineEx::run(void)
 {
     VirtualMachine::run();
 
-    return int32( stack->pop() );
+    return std::int32_t(stack->pop());
 }
