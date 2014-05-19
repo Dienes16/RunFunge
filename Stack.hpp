@@ -29,20 +29,20 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 class Stack
 {
-    public:
-        typedef std::int64_t    ValueType;
+public:
+   typedef std::int64_t ValueType;
 
-    private:
-        std::stack<ValueType>   stack;
+private:
+   std::stack<ValueType> stack;
 
-    public:
-        void                    push( ValueType const value );
-        ValueType               pop( void );
-        std::string             popString( void );
+public:
+   void push(const ValueType value);
+   ValueType pop();
+   std::string popString();
 
-        void                    clear( void );
+   void clear();
 
-        std::uint32_t           size(void);
+   std::uint32_t size();
 };
 
 #endif // STACK_HPP

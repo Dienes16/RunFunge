@@ -31,65 +31,66 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 class VirtualMachine
 {
-    protected:
-        template<typename T>
-        class Vector
-        {
-            public:
-                T x, y;
+protected:
+   template<typename T>
+   class Vector
+   {
+   public:
+      T x;
+      T y;
 
-                Vector( T x, T y ): x( x ), y( y ) { }
-        };
+      Vector(T x, T y): x(x), y(y) { }
+   };
 
-        class IP
-        {
-            public:
-                Vector<std::int16_t> pos;
-                Vector<std::int16_t> dir;
+   class IP
+   {
+   public:
+      Vector<std::int16_t> pos;
+      Vector<std::int16_t> dir;
 
-                IP( void ): pos( 0, 0 ), dir( 1, 0 ) { }
+      IP(): pos(0, 0), dir(1, 0) { }
 
-                void move( void );
-        };
+      void move();
+   };
 
-    protected:
-        static const std::int16_t CODE_WIDTH = 80, CODE_HEIGHT = 25;
+protected:
+   static const std::int16_t CODE_WIDTH = 80, CODE_HEIGHT = 25;
 
-        char                    code[CODE_WIDTH][CODE_HEIGHT];
+   char code[CODE_WIDTH][CODE_HEIGHT];
 
-    protected:
-        typedef bool ( VirtualMachine::*funcP )( char );
+protected:
+   typedef bool (VirtualMachine::*funcP)(char);
 
-        bool                    cmdMovement( char c );
-        bool                    cmdConditionalMovement( char c );
-        bool                    cmdRandomMovement( char c );
-        bool                    cmdMath( char c );
-        bool                    cmdLogical( char c );
-        bool                    cmdStackManipulation( char c );
-        bool                    cmdOutput( char c );
-        bool                    cmdInput( char c );
-        bool                    cmdSkip( char c );
-        bool                    cmdCodeManipulation( char c );
-        bool                    cmdDigits( char c );
+   bool cmdMovement(char c);
+   bool cmdConditionalMovement(char c);
+   bool cmdRandomMovement(char c);
+   bool cmdMath(char c);
+   bool cmdLogical(char c);
+   bool cmdStackManipulation(char c);
+   bool cmdOutput(char c);
+   bool cmdInput(char c);
+   bool cmdSkip(char c);
+   bool cmdCodeManipulation(char c);
+   bool cmdDigits(char c);
 
-        std::map<char, funcP>   execute;
+   std::map<char, funcP> execute;
 
-        Stack                   *stack;
+   Stack* stack;
 
-        IP                      ip;
+   IP ip;
 
-        bool                    stringMode;
+   bool stringMode;
 
-        char                    getCmdAt( std::uint16_t x, std::uint16_t y);
-        void                    setCmdAt( std::uint16_t x, std::uint16_t y, char c);
+   char getCmdAt(std::uint16_t x, std::uint16_t y);
+   void setCmdAt(std::uint16_t x, std::uint16_t y, char c);
 
-    public:
-                                VirtualMachine( void );
-        virtual                 ~VirtualMachine( void );
+public:
+   VirtualMachine();
+   virtual ~VirtualMachine();
 
-        virtual void            loadCode( const std::string &filename );
+   virtual void loadCode(const std::string& filename);
 
-        virtual std::int32_t    run(void);
+   virtual std::int32_t run();
 };
 
 #endif // VIRTUALMACHINE_HPP

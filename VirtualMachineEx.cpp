@@ -28,228 +28,241 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <fstream>
 #include <cctype>
 
-VirtualMachineEx::VirtualMachineEx( void ):
-    VirtualMachine(),  stack1( stack ), stack2( new Stack )
+VirtualMachineEx::VirtualMachineEx()
+   : VirtualMachine()
+   , stack1(stack)
+   , stack2(new Stack)
 {
-    execute['c'] = funcP( &VirtualMachineEx::cmdClearStack );
-    execute['x'] = funcP( &VirtualMachineEx::cmdCoords );
+   execute['c'] = funcP(&VirtualMachineEx::cmdClearStack);
+   execute['x'] = funcP(&VirtualMachineEx::cmdCoords);
 
-    execute['u'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
-    execute['d'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
-    execute['l'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
-    execute['r'] = funcP( &VirtualMachineEx::cmdConditionalMovementEx );
+   execute['u'] = funcP(&VirtualMachineEx::cmdConditionalMovementEx);
+   execute['d'] = funcP(&VirtualMachineEx::cmdConditionalMovementEx);
+   execute['l'] = funcP(&VirtualMachineEx::cmdConditionalMovementEx);
+   execute['r'] = funcP(&VirtualMachineEx::cmdConditionalMovementEx);
 
-    execute['w'] = funcP( &VirtualMachineEx::cmdConditionalMovementCompare );
+   execute['w'] = funcP(&VirtualMachineEx::cmdConditionalMovementCompare);
 
-    execute['§'] = funcP( &VirtualMachineEx::cmdConstantRandomMovement );
+   execute['§'] = funcP(&VirtualMachineEx::cmdConstantRandomMovement);
 
-    execute['['] = funcP( &VirtualMachineEx::cmdTurn );
-    execute[']'] = funcP( &VirtualMachineEx::cmdTurn );
+   execute['['] = funcP(&VirtualMachineEx::cmdTurn);
+   execute[']'] = funcP(&VirtualMachineEx::cmdTurn);
 
-    execute['t'] = funcP( &VirtualMachineEx::cmdTurnAround );
+   execute['t'] = funcP(&VirtualMachineEx::cmdTurnAround);
 
-    execute['m'] = funcP( &VirtualMachineEx::cmdMoveTo );
+   execute['m'] = funcP(&VirtualMachineEx::cmdMoveTo);
 
-    execute['s'] = funcP( &VirtualMachineEx::cmdSwapStack );
+   execute['s'] = funcP(&VirtualMachineEx::cmdSwapStack);
 
-    execute['S'] = funcP( &VirtualMachineEx::cmdStackSize );
+   execute['S'] = funcP(&VirtualMachineEx::cmdStackSize);
 
-    execute[';'] = funcP( &VirtualMachineEx::cmdSwapStackTop );
+   execute[';'] = funcP(&VirtualMachineEx::cmdSwapStackTop);
 
-    execute['A'] = funcP( &VirtualMachineEx::cmdDigitsHex );
-    execute['B'] = funcP( &VirtualMachineEx::cmdDigitsHex );
-    execute['C'] = funcP( &VirtualMachineEx::cmdDigitsHex );
-    execute['D'] = funcP( &VirtualMachineEx::cmdDigitsHex );
-    execute['E'] = funcP( &VirtualMachineEx::cmdDigitsHex );
-    execute['F'] = funcP( &VirtualMachineEx::cmdDigitsHex );
+   execute['A'] = funcP(&VirtualMachineEx::cmdDigitsHex);
+   execute['B'] = funcP(&VirtualMachineEx::cmdDigitsHex);
+   execute['C'] = funcP(&VirtualMachineEx::cmdDigitsHex);
+   execute['D'] = funcP(&VirtualMachineEx::cmdDigitsHex);
+   execute['E'] = funcP(&VirtualMachineEx::cmdDigitsHex);
+   execute['F'] = funcP(&VirtualMachineEx::cmdDigitsHex);
 
-    execute['{'] = funcP( &VirtualMachineEx::cmdSubRoutine );
-    execute['}'] = funcP( &VirtualMachineEx::cmdSubRoutine );
+   execute['{'] = funcP(&VirtualMachineEx::cmdSubRoutine);
+   execute['}'] = funcP(&VirtualMachineEx::cmdSubRoutine);
 
-    execute['='] = funcP( &VirtualMachineEx::cmdExecute );
+   execute['='] = funcP(&VirtualMachineEx::cmdExecute);
 }
 
-VirtualMachineEx::~VirtualMachineEx( void )
+VirtualMachineEx::~VirtualMachineEx()
 {
-    delete stack2;
+   delete stack2;
 }
 
-bool VirtualMachineEx::cmdClearStack( char c )
+bool VirtualMachineEx::cmdClearStack(char c)
 {
-    stack->clear();
+   stack->clear();
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdCoords( char c )
+bool VirtualMachineEx::cmdCoords(char c)
 {
-    stack->push( ip.pos.x );
-    stack->push( ip.pos.y );
+   stack->push(ip.pos.x);
+   stack->push(ip.pos.y);
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdConditionalMovementEx( char c )
+bool VirtualMachineEx::cmdConditionalMovementEx(char c)
 {
-    if ( !stack->pop() )
-    {
-        switch ( c )
-        {
-            case 'u':
-                ip.dir.x = 0; ip.dir.y = -1; break;
+   if (!stack->pop())
+   {
+      switch (c)
+      {
+      case 'u':
+         ip.dir.x =  0;
+         ip.dir.y = -1;
+         break;
 
-            case 'd':
-                ip.dir.x = 0; ip.dir.y = 1; break;
+      case 'd':
+         ip.dir.x = 0;
+         ip.dir.y = 1;
+         break;
 
-            case 'l':
-                ip.dir.x = -1; ip.dir.y = 0; break;
+      case 'l':
+         ip.dir.x = -1;
+         ip.dir.y =  0;
+         break;
 
-            case 'r':
-                ip.dir.x = 1; ip.dir.y = 0;
-        }
-    }
+      case 'r':
+         ip.dir.x = 1;
+         ip.dir.y = 0;
+      }
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdConditionalMovementCompare( char c )
+bool VirtualMachineEx::cmdConditionalMovementCompare(char c)
 {
-    Stack::ValueType b = stack->pop(), a = stack->pop();
+   Stack::ValueType b = stack->pop();
+   Stack::ValueType a = stack->pop();
 
-    if ( a < b )
-        return cmdTurn( '[' );
-    else if ( a > b )
-        return cmdTurn( ']' );
-    else
-        return true;
+   if (a < b)
+      return cmdTurn('[');
+   else if (a > b)
+      return cmdTurn(']');
+   else
+      return true;
 }
 
-bool VirtualMachineEx::cmdConstantRandomMovement( char c )
+bool VirtualMachineEx::cmdConstantRandomMovement(char c)
 {
-    std::uint16_t randDir = std::rand() % 4;
+   std::uint16_t randDir = std::rand() % 4;
 
-    switch ( randDir )
-    {
-        case 0:
-            setCmdAt( ip.pos.x, ip.pos.y, '<' ); break;
+   switch (randDir)
+   {
+   case 0:
+      setCmdAt(ip.pos.x, ip.pos.y, '<');
+      break;
 
-        case 1:
-            setCmdAt( ip.pos.x, ip.pos.y, '>' ); break;
+   case 1:
+      setCmdAt(ip.pos.x, ip.pos.y, '>');
+      break;
 
-        case 2:
-            setCmdAt( ip.pos.x, ip.pos.y, 'v' ); break;
+   case 2:
+      setCmdAt(ip.pos.x, ip.pos.y, 'v');
+      break;
 
-        case 3:
-            setCmdAt( ip.pos.x, ip.pos.y, '^' );
-    }
+   case 3:
+      setCmdAt(ip.pos.x, ip.pos.y, '^');
+   }
 
-    return false;
+   return false;
 }
 
-bool VirtualMachineEx::cmdTurn( char c )
+bool VirtualMachineEx::cmdTurn(char c)
 {
-    Vector<std::int16_t> oldDir = ip.dir;
+   Vector<std::int16_t> oldDir = ip.dir;
 
-    if ( c == '[' )
-    {
-        ip.dir.x = oldDir.y;
-        ip.dir.y = -oldDir.x;
-    }
-    else if ( c == ']' )
-    {
-        ip.dir.x = -oldDir.y;
-        ip.dir.y = oldDir.x;
-    }
+   if (c == '[')
+   {
+      ip.dir.x =  oldDir.y;
+      ip.dir.y = -oldDir.x;
+   }
+   else if (c == ']')
+   {
+      ip.dir.x = -oldDir.y;
+      ip.dir.y =  oldDir.x;
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdTurnAround( char c )
+bool VirtualMachineEx::cmdTurnAround(char c)
 {
-    ip.dir.x *= -1;
-    ip.dir.y *= -1;
+   ip.dir.x *= -1;
+   ip.dir.y *= -1;
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdMoveTo( char c )
+bool VirtualMachineEx::cmdMoveTo(char c)
 {
-    ip.pos.y = stack->pop();
-    ip.pos.x = stack->pop();
+   ip.pos.y = stack->pop();
+   ip.pos.x = stack->pop();
 
-    return false;
+   return false;
 }
 
-bool VirtualMachineEx::cmdSwapStack( char c )
+bool VirtualMachineEx::cmdSwapStack(char c)
 {
-    stack = stack == stack1 ? stack2 : stack1;
+   stack = (stack == stack1) ? stack2 : stack1;
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdStackSize( char c )
+bool VirtualMachineEx::cmdStackSize(char c)
 {
-    stack->push( Stack::ValueType( stack->size() ) );
+   stack->push(Stack::ValueType(stack->size()));
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdSwapStackTop( char c )
+bool VirtualMachineEx::cmdSwapStackTop(char c)
 {
-    Stack *inactiveStack = stack == stack1 ? stack2 : stack1;
+   Stack* inactiveStack = (stack == stack1) ? stack2 : stack1;
 
-    inactiveStack->push( stack->pop() );
+   inactiveStack->push(stack->pop());
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdDigitsHex( char c )
+bool VirtualMachineEx::cmdDigitsHex(char c)
 {
-    stack->push( Stack::ValueType( c - 'A' + 10 ) );
+   stack->push(Stack::ValueType(c - 'A' + 10));
 
-    return true;
+   return true;
 }
 
-bool VirtualMachineEx::cmdSubRoutine( char c )
+bool VirtualMachineEx::cmdSubRoutine(char c)
 {
-    bool proceed = true;
+   bool proceed = true;
 
-    switch ( c )
-    {
-        case '{':
-            callstack.push( ip );
+   switch (c)
+   {
+   case '{':
+      callstack.push(ip);
 
-            ip.pos.y = stack->pop();
-            ip.pos.x = stack->pop();
+      ip.pos.y = stack->pop();
+      ip.pos.x = stack->pop();
 
-            proceed = false;
+      proceed = false;
 
-            break;
+      break;
 
-        case '}':
-            if ( !callstack.empty() )
-            {
-                ip = callstack.top();
+   case '}':
+      if (!callstack.empty())
+      {
+         ip = callstack.top();
 
-                callstack.pop();
-            }
-    }
+         callstack.pop();
+      }
+   }
 
-    return proceed;
+   return proceed;
 }
 
-bool VirtualMachineEx::cmdExecute( char c )
+bool VirtualMachineEx::cmdExecute(char c)
 {
-    std::string cmd = stack->popString();
+   std::string cmd = stack->popString();
 
-    stack->push( Stack::ValueType( std::system( cmd.c_str() ) ) );
+   stack->push(Stack::ValueType(std::system(cmd.c_str())));
 
-    return true;
+   return true;
 }
 
-std::int32_t VirtualMachineEx::run(void)
+std::int32_t VirtualMachineEx::run()
 {
-    VirtualMachine::run();
+   VirtualMachine::run();
 
-    return std::int32_t(stack->pop());
+   return std::int32_t(stack->pop());
 }

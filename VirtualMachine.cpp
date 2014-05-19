@@ -29,362 +29,393 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <sstream>
 #include <cctype>
 
-void VirtualMachine::IP::move( void )
+void VirtualMachine::IP::move()
 {
-    pos.x += dir.x;
-    if ( pos.x >= CODE_WIDTH )
-        pos.x = 0;
-    else if ( pos.x < 0 )
-        pos.x = CODE_WIDTH - 1;
+   pos.x += dir.x;
+   if (pos.x >= CODE_WIDTH)
+      pos.x = 0;
+   else if (pos.x < 0)
+      pos.x = CODE_WIDTH - 1;
 
-    pos.y += dir.y;
-    if ( pos.y >= CODE_HEIGHT )
-        pos.y = 0;
-    else if ( pos.y < 0 )
-        pos.y = CODE_HEIGHT - 1;
+   pos.y += dir.y;
+   if (pos.y >= CODE_HEIGHT)
+      pos.y = 0;
+   else if (pos.y < 0)
+      pos.y = CODE_HEIGHT - 1;
 }
 
-VirtualMachine::VirtualMachine( void ):
-    stack( new Stack ), stringMode( false )
+VirtualMachine::VirtualMachine()
+   : stack(new Stack)
+   , stringMode(false)
 {
-    std::srand( std::time( NULL ) );
+   std::srand(std::time(NULL));
 
-    execute['<'] = &VirtualMachine::cmdMovement;
-    execute['>'] = &VirtualMachine::cmdMovement;
-    execute['v'] = &VirtualMachine::cmdMovement;
-    execute['^'] = &VirtualMachine::cmdMovement;
+   execute['<'] = &VirtualMachine::cmdMovement;
+   execute['>'] = &VirtualMachine::cmdMovement;
+   execute['v'] = &VirtualMachine::cmdMovement;
+   execute['^'] = &VirtualMachine::cmdMovement;
 
-    execute['_'] = &VirtualMachine::cmdConditionalMovement;
-    execute['|'] = &VirtualMachine::cmdConditionalMovement;
+   execute['_'] = &VirtualMachine::cmdConditionalMovement;
+   execute['|'] = &VirtualMachine::cmdConditionalMovement;
 
-    execute['?'] = &VirtualMachine::cmdRandomMovement;
+   execute['?'] = &VirtualMachine::cmdRandomMovement;
 
-    execute['+'] = &VirtualMachine::cmdMath;
-    execute['-'] = &VirtualMachine::cmdMath;
-    execute['*'] = &VirtualMachine::cmdMath;
-    execute['/'] = &VirtualMachine::cmdMath;
-    execute['%'] = &VirtualMachine::cmdMath;
+   execute['+'] = &VirtualMachine::cmdMath;
+   execute['-'] = &VirtualMachine::cmdMath;
+   execute['*'] = &VirtualMachine::cmdMath;
+   execute['/'] = &VirtualMachine::cmdMath;
+   execute['%'] = &VirtualMachine::cmdMath;
 
-    execute['!'] = &VirtualMachine::cmdLogical;
-    execute['`'] = &VirtualMachine::cmdLogical;
+   execute['!'] = &VirtualMachine::cmdLogical;
+   execute['`'] = &VirtualMachine::cmdLogical;
 
-    execute[':']  = &VirtualMachine::cmdStackManipulation;
-    execute['\\'] = &VirtualMachine::cmdStackManipulation;
-    execute['$']  = &VirtualMachine::cmdStackManipulation;
+   execute[':']  = &VirtualMachine::cmdStackManipulation;
+   execute['\\'] = &VirtualMachine::cmdStackManipulation;
+   execute['$']  = &VirtualMachine::cmdStackManipulation;
 
-    execute['.'] = &VirtualMachine::cmdOutput;
-    execute[','] = &VirtualMachine::cmdOutput;
+   execute['.'] = &VirtualMachine::cmdOutput;
+   execute[','] = &VirtualMachine::cmdOutput;
 
-    execute['&'] = &VirtualMachine::cmdInput;
-    execute['~'] = &VirtualMachine::cmdInput;
+   execute['&'] = &VirtualMachine::cmdInput;
+   execute['~'] = &VirtualMachine::cmdInput;
 
-    execute['#'] = &VirtualMachine::cmdSkip;
+   execute['#'] = &VirtualMachine::cmdSkip;
 
-    execute['g'] = &VirtualMachine::cmdCodeManipulation;
-    execute['p'] = &VirtualMachine::cmdCodeManipulation;
+   execute['g'] = &VirtualMachine::cmdCodeManipulation;
+   execute['p'] = &VirtualMachine::cmdCodeManipulation;
 
-    execute['0'] = &VirtualMachine::cmdDigits;
-    execute['1'] = &VirtualMachine::cmdDigits;
-    execute['2'] = &VirtualMachine::cmdDigits;
-    execute['3'] = &VirtualMachine::cmdDigits;
-    execute['4'] = &VirtualMachine::cmdDigits;
-    execute['5'] = &VirtualMachine::cmdDigits;
-    execute['6'] = &VirtualMachine::cmdDigits;
-    execute['7'] = &VirtualMachine::cmdDigits;
-    execute['8'] = &VirtualMachine::cmdDigits;
-    execute['9'] = &VirtualMachine::cmdDigits;
+   execute['0'] = &VirtualMachine::cmdDigits;
+   execute['1'] = &VirtualMachine::cmdDigits;
+   execute['2'] = &VirtualMachine::cmdDigits;
+   execute['3'] = &VirtualMachine::cmdDigits;
+   execute['4'] = &VirtualMachine::cmdDigits;
+   execute['5'] = &VirtualMachine::cmdDigits;
+   execute['6'] = &VirtualMachine::cmdDigits;
+   execute['7'] = &VirtualMachine::cmdDigits;
+   execute['8'] = &VirtualMachine::cmdDigits;
+   execute['9'] = &VirtualMachine::cmdDigits;
 }
 
-VirtualMachine::~VirtualMachine( void )
+VirtualMachine::~VirtualMachine()
 {
-    delete stack;
+   delete stack;
 }
 
-bool VirtualMachine::cmdMovement( char c )
+bool VirtualMachine::cmdMovement(char c)
 {
-    switch ( c )
-    {
-        case '<':
-            ip.dir.x = -1; ip.dir.y = 0; break;
+   switch (c)
+   {
+   case '<':
+      ip.dir.x = -1;
+      ip.dir.y =  0;
+      break;
 
-        case '>':
-            ip.dir.x = 1; ip.dir.y = 0; break;
+   case '>':
+      ip.dir.x = 1;
+      ip.dir.y = 0;
+      break;
 
-        case 'v':
-            ip.dir.x = 0; ip.dir.y = 1; break;
+   case 'v':
+      ip.dir.x = 0;
+      ip.dir.y = 1;
+      break;
 
-        case '^':
-            ip.dir.x = 0; ip.dir.y = -1;
-    }
+   case '^':
+      ip.dir.x =  0;
+      ip.dir.y = -1;
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdConditionalMovement( char c )
+bool VirtualMachine::cmdConditionalMovement(char c)
 {
-    Stack::ValueType val = stack->pop();
+   Stack::ValueType val = stack->pop();
 
-    switch ( c )
-    {
-        case '_':
-            ip.dir.y = 0; ip.dir.x = val ? -1 : 1; break;
+   switch (c)
+   {
+   case '_':
+      ip.dir.y = 0;
+      ip.dir.x = val ? -1 : 1;
+      break;
 
-        case '|':
-            ip.dir.x = 0; ip.dir.y = val ? -1 : 1;
-    }
+   case '|':
+      ip.dir.x = 0;
+      ip.dir.y = val ? -1 : 1;
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdRandomMovement( char c )
+bool VirtualMachine::cmdRandomMovement(char c)
 {
-    short randDir = std::rand() % 4;
+   short randDir = std::rand() % 4;
 
-    switch ( randDir )
-    {
-        case 0:
-            ip.dir.x = -1; ip.dir.y = 0; break;
+   switch (randDir)
+   {
+   case 0:
+      ip.dir.x = -1;
+      ip.dir.y =  0;
+      break;
 
-        case 1:
-            ip.dir.x = 1; ip.dir.y = 0; break;
+   case 1:
+      ip.dir.x = 1;
+      ip.dir.y = 0;
+      break;
 
-        case 2:
-            ip.dir.x = 0; ip.dir.y = 1; break;
+   case 2:
+      ip.dir.x = 0;
+      ip.dir.y = 1;
+      break;
 
-        case 3:
-            ip.dir.x = 0; ip.dir.y = -1;
-    }
+   case 3:
+      ip.dir.x =  0;
+      ip.dir.y = -1;
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdMath( char c )
+bool VirtualMachine::cmdMath(char c)
 {
-    Stack::ValueType b = stack->pop(), a = stack->pop();
+   Stack::ValueType b = stack->pop();
+   Stack::ValueType a = stack->pop();
 
-    switch ( c )
-    {
-        case '+':
-            stack->push( a + b ); break;
+   switch (c)
+   {
+   case '+':
+      stack->push(a + b);
+      break;
 
-        case '-':
-            stack->push( a - b ); break;
+   case '-':
+      stack->push(a - b);
+      break;
 
-        case '*':
-            stack->push( a * b ); break;
+   case '*':
+      stack->push(a * b);
+      break;
 
-        case '/':
-            stack->push( a / b ); break;
+   case '/':
+      stack->push(a / b);
+      break;
 
-        case '%':
-            stack->push( a % b );
-    }
+   case '%':
+      stack->push(a % b);
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdLogical( char c )
+bool VirtualMachine::cmdLogical(char c)
 {
-    switch ( c )
-    {
-        case '!':
-            stack->push( !( stack->pop() ) ); break;
+   switch (c)
+   {
+   case '!':
+      stack->push(!(stack->pop()));
+      break;
 
-        case '`':
-            stack->push( stack->pop() < stack->pop() );
-    }
+   case '`':
+      stack->push(stack->pop() < stack->pop());
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdStackManipulation( char c )
+bool VirtualMachine::cmdStackManipulation(char c)
 {
-    switch ( c )
-    {
-        case ':':
-            {
-                Stack::ValueType val = stack->pop();
+   switch (c)
+   {
+   case ':':
+   {
+      Stack::ValueType val = stack->pop();
 
-                stack->push( val );
-                stack->push( val );
-            }
-            break;
+      stack->push(val);
+      stack->push(val);
+   }
+      break;
 
-        case '\\':
-            {
-                Stack::ValueType a = stack->pop(),
-                                 b = stack->pop();
+   case '\\':
+   {
+      Stack::ValueType a = stack->pop();
+      Stack::ValueType b = stack->pop();
 
-                stack->push( a );
-                stack->push( b );
-            }
-            break;
+      stack->push(a);
+      stack->push(b);
+   }
+      break;
 
-        case '$':
-            stack->pop();
-    }
+   case '$':
+      stack->pop();
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdOutput( char c )
+bool VirtualMachine::cmdOutput(char c)
 {
-    Stack::ValueType val = stack->pop();
+   Stack::ValueType val = stack->pop();
 
-    switch ( c )
-    {
-        case '.':
-            std::cout << val << ' '; break;
+   switch (c)
+   {
+   case '.':
+      std::cout << val << ' ';
+      break;
 
-        case ',':
-            std::cout << char( val );
-    }
+   case ',':
+      std::cout << char(val);
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdInput( char c )
+bool VirtualMachine::cmdInput(char c)
 {
-    switch ( c )
-    {
-        case '&':
-            {
-                std::string s;
-                std::getline( std::cin, s );
+   switch (c)
+   {
+   case '&':
+   {
+      std::string s;
+      std::getline(std::cin, s);
 
-                std::stringstream ss;
-                ss << s;
+      std::stringstream ss;
+      ss << s;
 
-                Stack::ValueType val;
-                ss >> val;
+      Stack::ValueType val;
+      ss >> val;
 
-                stack->push( val );
-            }
-            break;
+      stack->push(val);
+   }
+      break;
 
-        case '~':
-            stack->push( std::getchar() );
-    }
+   case '~':
+      stack->push(std::getchar());
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdSkip( char c )
+bool VirtualMachine::cmdSkip(char c)
 {
-    ip.move();
+   ip.move();
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdCodeManipulation( char c )
+bool VirtualMachine::cmdCodeManipulation(char c)
 {
-    Stack::ValueType y = stack->pop(), x = stack->pop();
+   Stack::ValueType y = stack->pop();
+   Stack::ValueType x = stack->pop();
 
-    switch ( c )
-    {
-        case 'g':
-            stack->push( getCmdAt( x, y ) ); break;
+   switch (c)
+   {
+   case 'g':
+      stack->push(getCmdAt(x, y));
+      break;
 
-        case 'p':
-            setCmdAt( x, y, char( stack->pop() ) );
-    }
+   case 'p':
+      setCmdAt(x, y, char(stack->pop()));
+   }
 
-    return true;
+   return true;
 }
 
-bool VirtualMachine::cmdDigits( char c )
+bool VirtualMachine::cmdDigits(char c)
 {
-    if ( std::isdigit( c ) )
-        stack->push( Stack::ValueType( c - '0' ) );
+   if (std::isdigit(c))
+      stack->push(Stack::ValueType(c - '0'));
 
-    return true;
+   return true;
 }
 
-void VirtualMachine::loadCode( const std::string &filename )
+void VirtualMachine::loadCode(const std::string& filename)
 {
-    std::ifstream file;
-    std::uint16_t x, y;
-    char cmd;
-    bool done = false;
+   std::ifstream file;
+   std::uint16_t x;
+   std::uint16_t y;
+   char cmd;
+   bool done = false;
 
-    file.open( filename.c_str() );
+   file.open(filename.c_str());
 
-    for ( y = 0; y < CODE_HEIGHT; ++y )
-        for ( x = 0; x < CODE_WIDTH; ++x )
-            setCmdAt( x, y, ' ' );
+   for (y = 0; y < CODE_HEIGHT; ++y)
+      for (x = 0; x < CODE_WIDTH; ++x)
+         setCmdAt(x, y, ' ');
 
-    for ( y = 0; y < CODE_HEIGHT; ++y )
-    {
-        for ( x = 0; x < CODE_WIDTH; ++x )
-        {
-            if ( file.get( cmd ) )
-            {
-                if ( cmd != '\n' )
-                    setCmdAt( x, y, cmd );
-                else
-                    break;
-            }
+   for (y = 0; y < CODE_HEIGHT; ++y)
+   {
+      for (x = 0; x < CODE_WIDTH; ++x)
+      {
+         if (file.get(cmd))
+         {
+            if (cmd != '\n')
+               setCmdAt(x, y, cmd);
             else
-            {
-                done = true;
-                break;
-            }
-        }
-
-        if ( done )
+               break;
+         }
+         else
+         {
+            done = true;
             break;
-    }
+         }
+      }
 
-    file.close();
+      if (done)
+         break;
+   }
+
+   file.close();
 }
 
-std::int32_t VirtualMachine::run(void)
+std::int32_t VirtualMachine::run()
 {
-    char cmd = ' ', prevCmd;
-    std::map<char, funcP>::iterator cmdIt;
-    bool proceed, doLog = true;
-    std::int32_t result = 0;
+   char cmd = ' ';
+   char prevCmd;
+   std::map<char, funcP>::iterator cmdIt;
+   bool proceed;
+   bool doLog = true;
+   std::int32_t result = 0;
 
-    std::ofstream logfile;
-    logfile.open( "logfile.txt", std::ios::out );
+   std::ofstream logfile;
+   logfile.open("logfile.txt", std::ios::out);
 
-    while ( true )
-    {
-        prevCmd = cmd;
-        cmd = getCmdAt( ip.pos.x, ip.pos.y );
+   for (;;)
+   {
+      prevCmd = cmd;
+      cmd = getCmdAt(ip.pos.x, ip.pos.y);
 
-        if ( doLog && logfile.is_open() )
-        {
-            if ( /*cmd != prev_cmd &&*/ cmd != ' ' )
-                logfile << cmd << " pos: " << ip.pos.x << "," << ip.pos.y << " dir: " << ip.dir.x << "," << ip.dir.y << std::endl;
-        }
+      if (doLog && logfile.is_open())
+      {
+         if ( /*cmd != prev_cmd &&*/ cmd != ' ')
+            logfile << cmd << " pos: " << ip.pos.x << "," << ip.pos.y << " dir: " << ip.dir.x << "," << ip.dir.y << std::endl;
+      }
 
-        proceed = true;
+      proceed = true;
 
-        if ( cmd == '"' )
-            stringMode = 1 - stringMode;
-        else if ( stringMode )
-            stack->push( cmd );
-        else if ( cmd == '@' )
-            break;
-        else
-            if ( ( cmdIt = execute.find( cmd ) ) != execute.end() )
-                proceed = ( this->*cmdIt->second )( cmd );
+      if (cmd == '"')
+         stringMode = 1 - stringMode;
+      else if (stringMode)
+         stack->push(cmd);
+      else if (cmd == '@')
+         break;
+      else
+         if ((cmdIt = execute.find(cmd)) != execute.end())
+            proceed = (this->*cmdIt->second)(cmd);
 
-        if ( proceed )
-            ip.move();
-    }
+      if (proceed)
+         ip.move();
+   }
 
-    logfile.close();
+   logfile.close();
 
-    return result;
+   return result;
 }
 
-char VirtualMachine::getCmdAt( std::uint16_t x, std::uint16_t y)
+char VirtualMachine::getCmdAt(std::uint16_t x, std::uint16_t y)
 {
-    return code[x][y];
+   return code[x][y];
 }
-void VirtualMachine::setCmdAt( std::uint16_t x, std::uint16_t y, char c)
+
+void VirtualMachine::setCmdAt(std::uint16_t x, std::uint16_t y, char c)
 {
-    code[x][y] = c;
+   code[x][y] = c;
 }

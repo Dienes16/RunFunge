@@ -30,32 +30,33 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 class VirtualMachineEx: public VirtualMachine
 {
-    protected:
+protected:
 
-        bool            cmdClearStack( char c );
-        bool            cmdCoords( char c );
-        bool            cmdConditionalMovementEx( char c );
-        bool            cmdConditionalMovementCompare( char c );
-        bool            cmdConstantRandomMovement( char c );
-        bool            cmdTurn( char c );
-        bool            cmdTurnAround( char c );
-        bool            cmdMoveTo( char c );
-        bool            cmdSwapStack( char c );
-        bool            cmdStackSize( char c );
-        bool            cmdSwapStackTop( char c );
-        bool            cmdDigitsHex( char c );
-        bool            cmdSubRoutine( char c );
-        bool            cmdExecute( char c );
+   bool cmdClearStack(char c);
+   bool cmdCoords(char c);
+   bool cmdConditionalMovementEx(char c);
+   bool cmdConditionalMovementCompare(char c);
+   bool cmdConstantRandomMovement(char c);
+   bool cmdTurn(char c);
+   bool cmdTurnAround(char c);
+   bool cmdMoveTo(char c);
+   bool cmdSwapStack(char c);
+   bool cmdStackSize(char c);
+   bool cmdSwapStackTop(char c);
+   bool cmdDigitsHex(char c);
+   bool cmdSubRoutine(char c);
+   bool cmdExecute(char c);
 
-        Stack           *stack1, *stack2;
+   Stack* stack1;
+   Stack* stack2;
 
-        std::stack<IP>  callstack;
+   std::stack<IP> callstack;
 
-    public:
-                        VirtualMachineEx( void );
-                        ~VirtualMachineEx( void );
+public:
+   VirtualMachineEx();
+   ~VirtualMachineEx();
 
-        std::int32_t    run(void);
+   std::int32_t run();
 };
 
 #endif // VIRTUALMACHINEEX_HPP
