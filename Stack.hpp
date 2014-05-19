@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 Author E-Mail: dienes16 [at] googlemail [dot] com
 */
 
-#ifndef STACK_H
-#define STACK_H
+#ifndef STACK_HPP
+#define STACK_HPP
 
 #include <stack>
 #include <string>
@@ -45,4 +45,4 @@ class Stack
         std::uint32_t           size(void);
 };
 
-#endif // STACK_H
+#endif // STACK_HPP

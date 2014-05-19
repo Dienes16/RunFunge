@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 Author E-Mail: dienes16 [at] googlemail [dot] com
 */
 
-#ifndef VIRTUALMACHINEEX_H
-#define VIRTUALMACHINEEX_H
+#ifndef VIRTUALMACHINEEX_HPP
+#define VIRTUALMACHINEEX_HPP
 
 #include "VirtualMachine.hpp"
 
@@ -58,4 +58,4 @@ class VirtualMachineEx: public VirtualMachine
         std::int32_t    run(void);
 };
 
-#endif // VIRTUALMACHINEEX_H
+#endif // VIRTUALMACHINEEX_HPP
