@@ -27,17 +27,19 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <string>
 #include <cstdint>
 
-class Stack
+class Stack final
 {
 public:
-   typedef std::int64_t ValueType;
+   using ValueType = std::int64_t;
 
 private:
-   std::stack<ValueType> stack;
+   std::stack<ValueType> m_oStack;
 
 public:
-   void push(const ValueType value);
+   void push(const ValueType kiValue);
+   
    ValueType pop();
+   
    std::string popString();
 
    void clear();

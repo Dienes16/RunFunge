@@ -22,47 +22,50 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include "Stack.hpp"
 
-void Stack::push(const Stack::ValueType value)
+#include <stdexcept>
+
+void Stack::push(const Stack::ValueType kiValue)
 {
-   stack.push(value);
+   m_oStack.push(kiValue);
 }
 
 Stack::ValueType Stack::pop()
 {
-   ValueType result;
+   ValueType iResult = 0;
 
-   if (stack.size() > 0)
+   if (m_oStack.size() > 0)
    {
-      result = stack.top();
-      stack.pop();
-   }
-   else
-   {
-      result = 0;
+      iResult = m_oStack.top();
+      m_oStack.pop();
    }
 
-   return result;
+   return iResult;
 }
 
 std::string Stack::popString()
 {
-   std::string str;
+   std::string sString;
 
-   ValueType val;
+   ValueType iValue;
 
-   while ((val = pop()) != 0)
-      str += char(val);
+   while ((iValue = pop()) != 0)
+   {
+      if (iValue > 255)
+         throw std::runtime_error("Stack value is not a byte");
 
-   return str;
+      sString += static_cast<char>(iValue);
+   }
+
+   return sString;
 }
 
 void Stack::clear()
 {
-   while (!stack.empty())
-      stack.pop();
+   while (m_oStack.empty() == false)
+      m_oStack.pop();
 }
 
 std::uint32_t Stack::size()
 {
-   return (std::uint32_t)(stack.size());
+   return static_cast<std::uint32_t>(m_oStack.size());
 }
