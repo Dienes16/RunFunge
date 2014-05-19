@@ -49,7 +49,7 @@ r	Conditional Move Right: Pops a value, if it is 0, behave like >, otherwise kee
 t	Turn Around: Move to opposite direction
 w	Compare: Pops B and A, acts like [ if A < B, acts like ] if A > B, keep direction if a = b (borrowed from Funge-98)
 c	Clear: Clears the whole stack
-ง	Constant Random: When IP reaches a 'ง', it is randomly replaced by either <, >, ^, or v
+ยง	Constant Random: When IP reaches a 'ยง', it is randomly replaced by either <, >, ^, or v
 s	Swap Stack: Switches the active stack (there are 2 stacks)
 S	Stack Size: Pushes the number of elements in the stack (not counting the new one it pushes)
 ;	Swap Stack Top: Pops a value from the active stack and pushes it on the inactive stack
