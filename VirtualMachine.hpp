@@ -20,8 +20,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 Author E-Mail: dienes16 [at] googlemail [dot] com
 */
 
-#ifndef VIRTUALMACHINE_H
-#define VIRTUALMACHINE_H
+#ifndef VIRTUALMACHINE_HPP
+#define VIRTUALMACHINE_HPP
 
 #include <map>
 #include <string>
@@ -92,4 +92,4 @@ class VirtualMachine
         virtual std::int32_t    run(void);
 };
 
-#endif // VIRTUALMACHINE_H
+#endif // VIRTUALMACHINE_HPP
