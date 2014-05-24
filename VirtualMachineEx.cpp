@@ -180,8 +180,8 @@ bool VirtualMachineEx::cmdTurnAround(char /*c*/)
 
 bool VirtualMachineEx::cmdMoveTo(char /*c*/)
 {
-   m_oInstructionPointer.m_oPosition.y = static_cast<std::uint16_t>(m_oStack.pop());
-   m_oInstructionPointer.m_oPosition.x = static_cast<std::uint16_t>(m_oStack.pop());
+   m_oInstructionPointer.m_oPosition.y = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
+   m_oInstructionPointer.m_oPosition.x = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
 
    return false;
 }
@@ -209,8 +209,8 @@ bool VirtualMachineEx::cmdSubRoutine(char c)
    case '{':
       callstack.push(m_oInstructionPointer);
 
-      m_oInstructionPointer.m_oPosition.y = static_cast<std::uint16_t>(m_oStack.pop());
-      m_oInstructionPointer.m_oPosition.x = static_cast<std::uint16_t>(m_oStack.pop());
+      m_oInstructionPointer.m_oPosition.y = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
+      m_oInstructionPointer.m_oPosition.x = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
 
       proceed = false;
 
@@ -241,5 +241,5 @@ std::int32_t VirtualMachineEx::run()
 {
    VirtualMachine::run();
 
-   return std::int32_t(m_oStack.pop());
+   return m_oStack.pop<std::int32_t>();
 }

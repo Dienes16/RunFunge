@@ -307,7 +307,7 @@ bool VirtualMachine::cmdCodeManipulation(char c)
       break;
 
    case 'p':
-      setCmdAt({static_cast<InstructionPointer::VectorType::ValueType>(x), static_cast<InstructionPointer::VectorType::ValueType>(y)}, static_cast<char>(m_oStack.pop()));
+      setCmdAt({static_cast<InstructionPointer::VectorType::ValueType>(x), static_cast<InstructionPointer::VectorType::ValueType>(y)}, m_oStack.pop<char>());
    }
 
    return true;

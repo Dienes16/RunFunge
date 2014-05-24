@@ -29,19 +29,6 @@ void Stack::push(const Stack::ValueType kiValue)
    m_oStack.push(kiValue);
 }
 
-Stack::ValueType Stack::pop()
-{
-   ValueType iResult = 0;
-
-   if (m_oStack.size() > 0)
-   {
-      iResult = m_oStack.top();
-      m_oStack.pop();
-   }
-
-   return iResult;
-}
-
 std::string Stack::popString()
 {
    std::string sString;
