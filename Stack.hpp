@@ -26,7 +26,6 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <stack>
 #include <string>
 #include <cstdint>
-#include <type_traits>
 
 template<typename T>
 class Stack final
@@ -38,53 +37,22 @@ private:
    std::stack<ValueType> m_oStack;
 
 public:
-   void push(const T& rkxValue)
-   {
-      m_oStack.push(rkxValue);
-   }
+   inline void push(const T& rkxValue);
    
-   template<typename U = ValueType>
-   U pop()
-   {
-      static_assert(std::is_convertible<T, U>::value, "T is not convertible to U");
-      
-      if (m_oStack.empty())
-         return {};
-      
-      T xResult = m_oStack.top();
-      
-      m_oStack.pop();
+   template<typename U = T>
+   U pop();
 
-      return static_cast<U>(xResult);
-   }
-   
-   std::string popString()
-   {
-      std::string sString;
+   std::string popString();
 
-      char cValue;
+   inline bool isEmpty();
 
-      while ((cValue = pop<char>()) != 0)
-         sString += static_cast<char>(cValue);
+   inline void clear();
 
-      return sString;
-   }
-
-   bool empty()
-   {
-      return m_oStack.empty();
-   }
-
-   void clear()
-   {
-      while (m_oStack.empty() == false)
-         m_oStack.pop();
-   }
-
-   std::uint32_t size()
-   {
-      return static_cast<std::uint32_t>(m_oStack.size());
-   }
+   inline std::uint32_t getSize();
 };
+
+#ifndef STACK_HPP_NOIMPL
+#   include "Stack.ipp"
+#endif // STACK_HPP_NOIMPL
 
 #endif // STACK_HPP
