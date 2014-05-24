@@ -117,8 +117,8 @@ bool VirtualMachineEx::cmdConditionalMovementEx(char c)
 
 bool VirtualMachineEx::cmdConditionalMovementCompare(char /*c*/)
 {
-   Stack::ValueType b = m_oStack.pop();
-   Stack::ValueType a = m_oStack.pop();
+   decltype(m_oStack)::ValueType b = m_oStack.pop();
+   decltype(m_oStack)::ValueType a = m_oStack.pop();
 
    if (a < b)
       return cmdTurn('[');
@@ -188,14 +188,14 @@ bool VirtualMachineEx::cmdMoveTo(char /*c*/)
 
 bool VirtualMachineEx::cmdStackSize(char /*c*/)
 {
-   m_oStack.push(Stack::ValueType(m_oStack.size()));
+   m_oStack.push(decltype(m_oStack)::ValueType(m_oStack.size()));
 
    return true;
 }
 
 bool VirtualMachineEx::cmdDigitsHex(char c)
 {
-   m_oStack.push(Stack::ValueType(c - 'A' + 10));
+   m_oStack.push(decltype(m_oStack)::ValueType(c - 'A' + 10));
 
    return true;
 }
@@ -219,9 +219,7 @@ bool VirtualMachineEx::cmdSubRoutine(char c)
    case '}':
       if (!callstack.empty())
       {
-         m_oInstructionPointer = callstack.top();
-
-         callstack.pop();
+         m_oInstructionPointer = callstack.pop();
       }
    }
 
@@ -232,7 +230,7 @@ bool VirtualMachineEx::cmdExecute(char /*c*/)
 {
    std::string cmd = m_oStack.popString();
 
-   m_oStack.push(Stack::ValueType(std::system(cmd.c_str())));
+   m_oStack.push(decltype(m_oStack)::ValueType(std::system(cmd.c_str())));
 
    return true;
 }

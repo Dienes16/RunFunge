@@ -25,7 +25,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include "VirtualMachine.hpp"
 
-#include <stack>
+#include "Stack.hpp"
+
 #include <cstdint>
 
 class VirtualMachineEx: public VirtualMachine
@@ -45,7 +46,7 @@ protected:
    bool cmdSubRoutine(char c);
    bool cmdExecute(char c);
 
-   std::stack<InstructionPointer> callstack;
+   Stack<InstructionPointer> callstack;
 
 public:
    VirtualMachineEx();

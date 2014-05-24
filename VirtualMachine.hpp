@@ -132,7 +132,7 @@ protected:
 
    std::map<char, CommandFunction> m_aCommands;
 
-   Stack m_oStack;
+   Stack<std::uint64_t> m_oStack;
 
    InstructionPointer m_oInstructionPointer;
 
