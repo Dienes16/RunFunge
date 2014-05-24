@@ -26,6 +26,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <stack>
 #include <string>
 #include <cstdint>
+#include <type_traits>
 
 class Stack final
 {
@@ -38,7 +39,20 @@ private:
 public:
    void push(const ValueType kiValue);
    
-   ValueType pop();
+   template<typename T = ValueType>
+   T pop()
+   {
+      static_assert(std::is_convertible<ValueType, T>::value, "ValueType is not convertible to T");
+      
+      if (m_oStack.empty())
+         return static_cast<T>(0);
+      
+      ValueType iResult = m_oStack.top();
+      
+      m_oStack.pop();
+
+      return static_cast<T>(iResult);
+   }
    
    std::string popString();
 
