@@ -359,24 +359,19 @@ int VirtualMachine::run()
    std::ofstream oLogfile;
    oLogfile.open("oLogfile.txt", std::ios::out);
 
-   char cCmd     = ' ';
-   char cPrevCmd = ' ';
-
-   bool bProceed = true;
-   bool bLog = true;
+   const bool kbLog = true;
 
    for (;;)
    {
-      cPrevCmd = cCmd;
-      cCmd = getCmdAt(m_oInstructionPointer.m_oPosition);
+      char cCmd = getCmdAt(m_oInstructionPointer.m_oPosition);
 
-      if (bLog && oLogfile.is_open())
+      if (kbLog && oLogfile.is_open())
       {
-         if ( /*cCmd != prev_cmd &&*/ cCmd != ' ')
+         if ( cCmd != ' ')
             oLogfile << cCmd << " pos: " << m_oInstructionPointer.m_oPosition.x << "," << m_oInstructionPointer.m_oPosition.y << " dir: " << m_oInstructionPointer.m_oDirection.x << "," << m_oInstructionPointer.m_oDirection.y << std::endl;
       }
 
-      bProceed = true;
+      bool bProceed = true;
 
       if (cCmd == '"')
       {
