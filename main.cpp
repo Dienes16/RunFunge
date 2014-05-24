@@ -23,29 +23,26 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
+#include <memory>
 
 #include "VirtualMachineEx.hpp"
 
-int main(int argc, char **argv)
+int main(int iArgCount, char **ppcArgValues)
 {
-   if (argc <= 1)
+   if (iArgCount <= 1)
    {
       std::cerr << "Usage: RunFunge.exe <file> [-bf93]";
       return EXIT_FAILURE;
    }
 
-   VirtualMachine* virtualMachine;
+   std::unique_ptr<VirtualMachine> upoVirtualMachine;
 
-   if (argc > 2 && !std::strcmp(argv[2], "-bf93"))
-      virtualMachine = new VirtualMachine;
+   if (iArgCount > 2 && !std::strcmp(ppcArgValues[2], "-bf93"))
+      upoVirtualMachine = std::make_unique<VirtualMachine>();
    else
-      virtualMachine = new VirtualMachineEx;
+      upoVirtualMachine = std::make_unique<VirtualMachineEx>();
 
-   virtualMachine->loadCode(argv[1]);
+   upoVirtualMachine->loadCode(ppcArgValues[1]);
 
-   int result = virtualMachine->run();
-
-   delete virtualMachine;
-
-   return result;
+   return upoVirtualMachine->run();
 }
