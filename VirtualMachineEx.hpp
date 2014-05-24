@@ -50,7 +50,7 @@ protected:
    Stack* stack1;
    Stack* stack2;
 
-   std::stack<IP> callstack;
+   std::stack<InstructionPointer> callstack;
 
 public:
    VirtualMachineEx();

@@ -29,19 +29,24 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <sstream>
 #include <cctype>
 
-void VirtualMachine::IP::move()
-{
-   pos.x += dir.x;
-   if (pos.x >= CODE_WIDTH)
-      pos.x = 0;
-   else if (pos.x < 0)
-      pos.x = CODE_WIDTH - 1;
+const VirtualMachine::InstructionPointer::VectorType VirtualMachine::InstructionPointer::ms_koDirectionUp   { 0, -1};
+const VirtualMachine::InstructionPointer::VectorType VirtualMachine::InstructionPointer::ms_koDirectionDown { 0,  1};
+const VirtualMachine::InstructionPointer::VectorType VirtualMachine::InstructionPointer::ms_koDirectionLeft {-1,  0};
+const VirtualMachine::InstructionPointer::VectorType VirtualMachine::InstructionPointer::ms_koDirectionRight{ 1,  0};
 
-   pos.y += dir.y;
-   if (pos.y >= CODE_HEIGHT)
-      pos.y = 0;
-   else if (pos.y < 0)
-      pos.y = CODE_HEIGHT - 1;
+void VirtualMachine::InstructionPointer::advance()
+{
+   m_oPosition.x += m_oDirection.x;
+   if (m_oPosition.x >= CODE_WIDTH)
+      m_oPosition.x = 0;
+   else if (m_oPosition.x < 0)
+      m_oPosition.x = CODE_WIDTH - 1;
+
+   m_oPosition.y += m_oDirection.y;
+   if (m_oPosition.y >= CODE_HEIGHT)
+      m_oPosition.y = 0;
+   else if (m_oPosition.y < 0)
+      m_oPosition.y = CODE_HEIGHT - 1;
 }
 
 VirtualMachine::VirtualMachine()
@@ -106,23 +111,19 @@ bool VirtualMachine::cmdMovement(char c)
    switch (c)
    {
    case '<':
-      ip.dir.x = -1;
-      ip.dir.y =  0;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionLeft;
       break;
 
    case '>':
-      ip.dir.x = 1;
-      ip.dir.y = 0;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionRight;
       break;
 
    case 'v':
-      ip.dir.x = 0;
-      ip.dir.y = 1;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionDown;
       break;
 
    case '^':
-      ip.dir.x =  0;
-      ip.dir.y = -1;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionUp;
    }
 
    return true;
@@ -135,13 +136,11 @@ bool VirtualMachine::cmdConditionalMovement(char c)
    switch (c)
    {
    case '_':
-      ip.dir.y = 0;
-      ip.dir.x = val ? -1 : 1;
+      ip.m_oDirection = (val) ? InstructionPointer::ms_koDirectionLeft : InstructionPointer::ms_koDirectionRight;
       break;
 
    case '|':
-      ip.dir.x = 0;
-      ip.dir.y = val ? -1 : 1;
+      ip.m_oDirection = (val) ? InstructionPointer::ms_koDirectionUp : InstructionPointer::ms_koDirectionDown;
    }
 
    return true;
@@ -154,23 +153,19 @@ bool VirtualMachine::cmdRandomMovement(char /*c*/)
    switch (randDir)
    {
    case 0:
-      ip.dir.x = -1;
-      ip.dir.y =  0;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionLeft;
       break;
 
    case 1:
-      ip.dir.x = 1;
-      ip.dir.y = 0;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionRight;
       break;
 
    case 2:
-      ip.dir.x = 0;
-      ip.dir.y = 1;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionDown;
       break;
 
    case 3:
-      ip.dir.x =  0;
-      ip.dir.y = -1;
+      ip.m_oDirection = InstructionPointer::ms_koDirectionUp;
    }
 
    return true;
@@ -296,7 +291,7 @@ bool VirtualMachine::cmdInput(char c)
 
 bool VirtualMachine::cmdSkip(char /*c*/)
 {
-   ip.move();
+   ip.advance();
 
    return true;
 }
@@ -381,12 +376,12 @@ std::int32_t VirtualMachine::run()
    for (;;)
    {
       prevCmd = cmd;
-      cmd = getCmdAt(ip.pos.x, ip.pos.y);
+      cmd = getCmdAt(ip.m_oPosition.x, ip.m_oPosition.y);
 
       if (doLog && logfile.is_open())
       {
          if ( /*cmd != prev_cmd &&*/ cmd != ' ')
-            logfile << cmd << " pos: " << ip.pos.x << "," << ip.pos.y << " dir: " << ip.dir.x << "," << ip.dir.y << std::endl;
+            logfile << cmd << " pos: " << ip.m_oPosition.x << "," << ip.m_oPosition.y << " dir: " << ip.m_oDirection.x << "," << ip.m_oDirection.y << std::endl;
       }
 
       proceed = true;
@@ -402,7 +397,7 @@ std::int32_t VirtualMachine::run()
             proceed = (this->*cmdIt->second)(cmd);
 
       if (proceed)
-         ip.move();
+         ip.advance();
    }
 
    logfile.close();

@@ -85,8 +85,8 @@ bool VirtualMachineEx::cmdClearStack(char /*c*/)
 
 bool VirtualMachineEx::cmdCoords(char /*c*/)
 {
-   stack->push(ip.pos.x);
-   stack->push(ip.pos.y);
+   stack->push(ip.m_oPosition.x);
+   stack->push(ip.m_oPosition.y);
 
    return true;
 }
@@ -98,23 +98,19 @@ bool VirtualMachineEx::cmdConditionalMovementEx(char c)
       switch (c)
       {
       case 'u':
-         ip.dir.x =  0;
-         ip.dir.y = -1;
+         ip.m_oDirection = InstructionPointer::ms_koDirectionUp;
          break;
 
       case 'd':
-         ip.dir.x = 0;
-         ip.dir.y = 1;
+         ip.m_oDirection = InstructionPointer::ms_koDirectionDown;
          break;
 
       case 'l':
-         ip.dir.x = -1;
-         ip.dir.y =  0;
+         ip.m_oDirection = InstructionPointer::ms_koDirectionLeft;
          break;
 
       case 'r':
-         ip.dir.x = 1;
-         ip.dir.y = 0;
+         ip.m_oDirection = InstructionPointer::ms_koDirectionRight;
       }
    }
 
@@ -141,19 +137,19 @@ bool VirtualMachineEx::cmdConstantRandomMovement(char /*c*/)
    switch (randDir)
    {
    case 0:
-      setCmdAt(ip.pos.x, ip.pos.y, '<');
+      setCmdAt(ip.m_oPosition.x, ip.m_oPosition.y, '<');
       break;
 
    case 1:
-      setCmdAt(ip.pos.x, ip.pos.y, '>');
+      setCmdAt(ip.m_oPosition.x, ip.m_oPosition.y, '>');
       break;
 
    case 2:
-      setCmdAt(ip.pos.x, ip.pos.y, 'v');
+      setCmdAt(ip.m_oPosition.x, ip.m_oPosition.y, 'v');
       break;
 
    case 3:
-      setCmdAt(ip.pos.x, ip.pos.y, '^');
+      setCmdAt(ip.m_oPosition.x, ip.m_oPosition.y, '^');
    }
 
    return false;
@@ -161,17 +157,17 @@ bool VirtualMachineEx::cmdConstantRandomMovement(char /*c*/)
 
 bool VirtualMachineEx::cmdTurn(char c)
 {
-   Vector<std::int16_t> oldDir = ip.dir;
+   Vector<std::int16_t> oldDir = ip.m_oDirection;
 
    if (c == '[')
    {
-      ip.dir.x =  oldDir.y;
-      ip.dir.y = -oldDir.x;
+      ip.m_oDirection.x =  oldDir.y;
+      ip.m_oDirection.y = -oldDir.x;
    }
    else if (c == ']')
    {
-      ip.dir.x = -oldDir.y;
-      ip.dir.y =  oldDir.x;
+      ip.m_oDirection.x = -oldDir.y;
+      ip.m_oDirection.y =  oldDir.x;
    }
 
    return true;
@@ -179,16 +175,15 @@ bool VirtualMachineEx::cmdTurn(char c)
 
 bool VirtualMachineEx::cmdTurnAround(char /*c*/)
 {
-   ip.dir.x *= -1;
-   ip.dir.y *= -1;
+   ip.m_oDirection = -ip.m_oDirection;
 
    return true;
 }
 
 bool VirtualMachineEx::cmdMoveTo(char /*c*/)
 {
-   ip.pos.y = static_cast<std::uint16_t>(stack->pop());
-   ip.pos.x = static_cast<std::uint16_t>(stack->pop());
+   ip.m_oPosition.y = static_cast<std::uint16_t>(stack->pop());
+   ip.m_oPosition.x = static_cast<std::uint16_t>(stack->pop());
 
    return false;
 }
@@ -232,8 +227,8 @@ bool VirtualMachineEx::cmdSubRoutine(char c)
    case '{':
       callstack.push(ip);
 
-      ip.pos.y = static_cast<std::uint16_t>(stack->pop());
-      ip.pos.x = static_cast<std::uint16_t>(stack->pop());
+      ip.m_oPosition.y = static_cast<std::uint16_t>(stack->pop());
+      ip.m_oPosition.x = static_cast<std::uint16_t>(stack->pop());
 
       proceed = false;
 
