@@ -32,7 +32,6 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 class VirtualMachineEx: public VirtualMachine
 {
 protected:
-
    bool cmdClearStack(char c);
    bool cmdCoords(char c);
    bool cmdConditionalMovementEx(char c);
@@ -46,13 +45,13 @@ protected:
    bool cmdSubRoutine(char c);
    bool cmdExecute(char c);
 
-   Stack<InstructionPointer> callstack;
+   Stack<InstructionPointer> m_oCallstack;
 
 public:
    VirtualMachineEx();
    ~VirtualMachineEx();
 
-   std::int32_t run();
+   int run();
 };
 
 #endif // VIRTUALMACHINEEX_HPP

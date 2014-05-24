@@ -32,6 +32,9 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 class VirtualMachine
 {
+public:
+   using StackValueType = std::int64_t;
+
 protected:
    template<typename T>
    class Vector
@@ -94,17 +97,18 @@ protected:
    class InstructionPointer
    {
    public:
-      using VectorType = Vector<std::int16_t>;
+      using PositionVectorType  = Vector<std::uint16_t>;
+      using DirectionVectorType = Vector<std:: int16_t>;
 
    public:
-      static const VectorType ms_koDirectionUp;
-      static const VectorType ms_koDirectionDown;
-      static const VectorType ms_koDirectionLeft;
-      static const VectorType ms_koDirectionRight;
+      static const DirectionVectorType ms_koDirectionUp;
+      static const DirectionVectorType ms_koDirectionDown;
+      static const DirectionVectorType ms_koDirectionLeft;
+      static const DirectionVectorType ms_koDirectionRight;
 
    public:
-      VectorType m_oPosition;
-      VectorType m_oDirection;
+      PositionVectorType m_oPosition;
+      DirectionVectorType m_oDirection;
 
    public:
       void advance();
@@ -132,14 +136,14 @@ protected:
 
    std::map<char, CommandFunction> m_aCommands;
 
-   Stack<std::uint64_t> m_oStack;
+   Stack<StackValueType> m_oStack;
 
    InstructionPointer m_oInstructionPointer;
 
    bool m_bStringMode;
 
-   char getCmdAt(const InstructionPointer::VectorType& rkoPosition);
-   void setCmdAt(const InstructionPointer::VectorType& rkoPosition, char c);
+   char getCmdAt(const InstructionPointer::PositionVectorType& rkoPosition);
+   void setCmdAt(const InstructionPointer::PositionVectorType& rkoPosition, char c);
 
 public:
    VirtualMachine();
@@ -147,7 +151,7 @@ public:
 
    virtual void loadCode(const std::string& rksFilename);
 
-   virtual std::int32_t run();
+   virtual int run();
 };
 
 template<typename T>
