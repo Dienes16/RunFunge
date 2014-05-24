@@ -121,7 +121,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Stack.cpp" />
     <ClCompile Include="VirtualMachine.cpp" />
     <ClCompile Include="VirtualMachineEx.cpp" />
   </ItemGroup>

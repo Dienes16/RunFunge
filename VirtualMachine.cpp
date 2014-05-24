@@ -130,7 +130,7 @@ bool VirtualMachine::cmdMovement(char c)
 
 bool VirtualMachine::cmdConditionalMovement(char c)
 {
-   Stack::ValueType val = m_oStack.pop();
+   decltype(m_oStack)::ValueType val = m_oStack.pop();
 
    switch (c)
    {
@@ -172,8 +172,8 @@ bool VirtualMachine::cmdRandomMovement(char /*c*/)
 
 bool VirtualMachine::cmdMath(char c)
 {
-   Stack::ValueType b = m_oStack.pop();
-   Stack::ValueType a = m_oStack.pop();
+   decltype(m_oStack)::ValueType b = m_oStack.pop();
+   decltype(m_oStack)::ValueType a = m_oStack.pop();
 
    switch (c)
    {
@@ -221,7 +221,7 @@ bool VirtualMachine::cmdStackManipulation(char c)
    {
    case ':':
    {
-      Stack::ValueType val = m_oStack.pop();
+      decltype(m_oStack)::ValueType val = m_oStack.pop();
 
       m_oStack.push(val);
       m_oStack.push(val);
@@ -230,8 +230,8 @@ bool VirtualMachine::cmdStackManipulation(char c)
 
    case '\\':
    {
-      Stack::ValueType a = m_oStack.pop();
-      Stack::ValueType b = m_oStack.pop();
+      decltype(m_oStack)::ValueType a = m_oStack.pop();
+      decltype(m_oStack)::ValueType b = m_oStack.pop();
 
       m_oStack.push(a);
       m_oStack.push(b);
@@ -247,7 +247,7 @@ bool VirtualMachine::cmdStackManipulation(char c)
 
 bool VirtualMachine::cmdOutput(char c)
 {
-   Stack::ValueType val = m_oStack.pop();
+   decltype(m_oStack)::ValueType val = m_oStack.pop();
 
    switch (c)
    {
@@ -274,7 +274,7 @@ bool VirtualMachine::cmdInput(char c)
       std::stringstream ss;
       ss << s;
 
-      Stack::ValueType val;
+      decltype(m_oStack)::ValueType val;
       ss >> val;
 
       m_oStack.push(val);
@@ -297,8 +297,8 @@ bool VirtualMachine::cmdSkip(char /*c*/)
 
 bool VirtualMachine::cmdCodeManipulation(char c)
 {
-   Stack::ValueType y = m_oStack.pop();
-   Stack::ValueType x = m_oStack.pop();
+   decltype(m_oStack)::ValueType y = m_oStack.pop();
+   decltype(m_oStack)::ValueType x = m_oStack.pop();
 
    switch (c)
    {
@@ -316,7 +316,7 @@ bool VirtualMachine::cmdCodeManipulation(char c)
 bool VirtualMachine::cmdDigits(char c)
 {
    if (std::isdigit(c))
-      m_oStack.push(Stack::ValueType(c - '0'));
+      m_oStack.push(decltype(m_oStack)::ValueType(c - '0'));
 
    return true;
 }
