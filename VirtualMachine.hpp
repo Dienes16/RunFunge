@@ -26,6 +26,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <map>
 #include <string>
 #include <cstdint>
+#include <array>
 
 #include "Stack.hpp"
 
@@ -35,6 +36,9 @@ protected:
    template<typename T>
    class Vector
    {
+   public:
+      using ValueType = T;
+
    public:
       T x;
       T y;
@@ -107,12 +111,12 @@ protected:
    };
 
 protected:
-   static const std::int16_t CODE_WIDTH = 80, CODE_HEIGHT = 25;
+   static const std::int16_t ms_ki16CodeWidth = 80, ms_ki16CodeHeight = 25;
 
-   char code[CODE_WIDTH][CODE_HEIGHT];
+   std::array<std::array<char, ms_ki16CodeHeight>, ms_ki16CodeWidth> code;
 
 protected:
-   typedef bool (VirtualMachine::*funcP)(char);
+   using CommandFunction = bool(VirtualMachine::*)(char);
 
    bool cmdMovement(char c);
    bool cmdConditionalMovement(char c);
@@ -126,22 +130,22 @@ protected:
    bool cmdCodeManipulation(char c);
    bool cmdDigits(char c);
 
-   std::map<char, funcP> execute;
+   std::map<char, CommandFunction> m_aCommands;
 
-   Stack* stack;
+   Stack m_oStack;
 
-   InstructionPointer ip;
+   InstructionPointer m_oInstructionPointer;
 
-   bool stringMode;
+   bool m_bStringMode;
 
-   char getCmdAt(std::uint16_t x, std::uint16_t y);
-   void setCmdAt(std::uint16_t x, std::uint16_t y, char c);
+   char getCmdAt(const InstructionPointer::VectorType& rkoPosition);
+   void setCmdAt(const InstructionPointer::VectorType& rkoPosition, char c);
 
 public:
    VirtualMachine();
    virtual ~VirtualMachine();
 
-   virtual void loadCode(const std::string& filename);
+   virtual void loadCode(const std::string& rksFilename);
 
    virtual std::int32_t run();
 };

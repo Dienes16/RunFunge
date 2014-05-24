@@ -40,15 +40,10 @@ protected:
    bool cmdTurn(char c);
    bool cmdTurnAround(char c);
    bool cmdMoveTo(char c);
-   bool cmdSwapStack(char c);
    bool cmdStackSize(char c);
-   bool cmdSwapStackTop(char c);
    bool cmdDigitsHex(char c);
    bool cmdSubRoutine(char c);
    bool cmdExecute(char c);
-
-   Stack* stack1;
-   Stack* stack2;
 
    std::stack<InstructionPointer> callstack;
 

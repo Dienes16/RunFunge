@@ -37,73 +37,72 @@ const VirtualMachine::InstructionPointer::VectorType VirtualMachine::Instruction
 void VirtualMachine::InstructionPointer::advance()
 {
    m_oPosition.x += m_oDirection.x;
-   if (m_oPosition.x >= CODE_WIDTH)
+   if (m_oPosition.x >= ms_ki16CodeWidth)
       m_oPosition.x = 0;
    else if (m_oPosition.x < 0)
-      m_oPosition.x = CODE_WIDTH - 1;
+      m_oPosition.x = ms_ki16CodeWidth - 1;
 
    m_oPosition.y += m_oDirection.y;
-   if (m_oPosition.y >= CODE_HEIGHT)
+   if (m_oPosition.y >= ms_ki16CodeHeight)
       m_oPosition.y = 0;
    else if (m_oPosition.y < 0)
-      m_oPosition.y = CODE_HEIGHT - 1;
+      m_oPosition.y = ms_ki16CodeHeight - 1;
 }
 
 VirtualMachine::VirtualMachine()
-   : stack(new Stack)
-   , stringMode(false)
+   : m_bStringMode(false)
 {
    std::srand(static_cast<unsigned int>(std::time(NULL)));
 
-   execute['<'] = &VirtualMachine::cmdMovement;
-   execute['>'] = &VirtualMachine::cmdMovement;
-   execute['v'] = &VirtualMachine::cmdMovement;
-   execute['^'] = &VirtualMachine::cmdMovement;
+   m_aCommands['<'] = &VirtualMachine::cmdMovement;
+   m_aCommands['>'] = &VirtualMachine::cmdMovement;
+   m_aCommands['v'] = &VirtualMachine::cmdMovement;
+   m_aCommands['^'] = &VirtualMachine::cmdMovement;
 
-   execute['_'] = &VirtualMachine::cmdConditionalMovement;
-   execute['|'] = &VirtualMachine::cmdConditionalMovement;
+   m_aCommands['_'] = &VirtualMachine::cmdConditionalMovement;
+   m_aCommands['|'] = &VirtualMachine::cmdConditionalMovement;
 
-   execute['?'] = &VirtualMachine::cmdRandomMovement;
+   m_aCommands['?'] = &VirtualMachine::cmdRandomMovement;
 
-   execute['+'] = &VirtualMachine::cmdMath;
-   execute['-'] = &VirtualMachine::cmdMath;
-   execute['*'] = &VirtualMachine::cmdMath;
-   execute['/'] = &VirtualMachine::cmdMath;
-   execute['%'] = &VirtualMachine::cmdMath;
+   m_aCommands['+'] = &VirtualMachine::cmdMath;
+   m_aCommands['-'] = &VirtualMachine::cmdMath;
+   m_aCommands['*'] = &VirtualMachine::cmdMath;
+   m_aCommands['/'] = &VirtualMachine::cmdMath;
+   m_aCommands['%'] = &VirtualMachine::cmdMath;
 
-   execute['!'] = &VirtualMachine::cmdLogical;
-   execute['`'] = &VirtualMachine::cmdLogical;
+   m_aCommands['!'] = &VirtualMachine::cmdLogical;
+   m_aCommands['`'] = &VirtualMachine::cmdLogical;
 
-   execute[':']  = &VirtualMachine::cmdStackManipulation;
-   execute['\\'] = &VirtualMachine::cmdStackManipulation;
-   execute['$']  = &VirtualMachine::cmdStackManipulation;
+   m_aCommands[':']  = &VirtualMachine::cmdStackManipulation;
+   m_aCommands['\\'] = &VirtualMachine::cmdStackManipulation;
+   m_aCommands['$']  = &VirtualMachine::cmdStackManipulation;
 
-   execute['.'] = &VirtualMachine::cmdOutput;
-   execute[','] = &VirtualMachine::cmdOutput;
+   m_aCommands['.'] = &VirtualMachine::cmdOutput;
+   m_aCommands[','] = &VirtualMachine::cmdOutput;
 
-   execute['&'] = &VirtualMachine::cmdInput;
-   execute['~'] = &VirtualMachine::cmdInput;
+   m_aCommands['&'] = &VirtualMachine::cmdInput;
+   m_aCommands['~'] = &VirtualMachine::cmdInput;
 
-   execute['#'] = &VirtualMachine::cmdSkip;
+   m_aCommands['#'] = &VirtualMachine::cmdSkip;
 
-   execute['g'] = &VirtualMachine::cmdCodeManipulation;
-   execute['p'] = &VirtualMachine::cmdCodeManipulation;
+   m_aCommands['g'] = &VirtualMachine::cmdCodeManipulation;
+   m_aCommands['p'] = &VirtualMachine::cmdCodeManipulation;
 
-   execute['0'] = &VirtualMachine::cmdDigits;
-   execute['1'] = &VirtualMachine::cmdDigits;
-   execute['2'] = &VirtualMachine::cmdDigits;
-   execute['3'] = &VirtualMachine::cmdDigits;
-   execute['4'] = &VirtualMachine::cmdDigits;
-   execute['5'] = &VirtualMachine::cmdDigits;
-   execute['6'] = &VirtualMachine::cmdDigits;
-   execute['7'] = &VirtualMachine::cmdDigits;
-   execute['8'] = &VirtualMachine::cmdDigits;
-   execute['9'] = &VirtualMachine::cmdDigits;
+   m_aCommands['0'] = &VirtualMachine::cmdDigits;
+   m_aCommands['1'] = &VirtualMachine::cmdDigits;
+   m_aCommands['2'] = &VirtualMachine::cmdDigits;
+   m_aCommands['3'] = &VirtualMachine::cmdDigits;
+   m_aCommands['4'] = &VirtualMachine::cmdDigits;
+   m_aCommands['5'] = &VirtualMachine::cmdDigits;
+   m_aCommands['6'] = &VirtualMachine::cmdDigits;
+   m_aCommands['7'] = &VirtualMachine::cmdDigits;
+   m_aCommands['8'] = &VirtualMachine::cmdDigits;
+   m_aCommands['9'] = &VirtualMachine::cmdDigits;
 }
 
 VirtualMachine::~VirtualMachine()
 {
-   delete stack;
+   //
 }
 
 bool VirtualMachine::cmdMovement(char c)
@@ -111,19 +110,19 @@ bool VirtualMachine::cmdMovement(char c)
    switch (c)
    {
    case '<':
-      ip.m_oDirection = InstructionPointer::ms_koDirectionLeft;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionLeft;
       break;
 
    case '>':
-      ip.m_oDirection = InstructionPointer::ms_koDirectionRight;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionRight;
       break;
 
    case 'v':
-      ip.m_oDirection = InstructionPointer::ms_koDirectionDown;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionDown;
       break;
 
    case '^':
-      ip.m_oDirection = InstructionPointer::ms_koDirectionUp;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionUp;
    }
 
    return true;
@@ -131,16 +130,16 @@ bool VirtualMachine::cmdMovement(char c)
 
 bool VirtualMachine::cmdConditionalMovement(char c)
 {
-   Stack::ValueType val = stack->pop();
+   Stack::ValueType val = m_oStack.pop();
 
    switch (c)
    {
    case '_':
-      ip.m_oDirection = (val) ? InstructionPointer::ms_koDirectionLeft : InstructionPointer::ms_koDirectionRight;
+      m_oInstructionPointer.m_oDirection = (val) ? InstructionPointer::ms_koDirectionLeft : InstructionPointer::ms_koDirectionRight;
       break;
 
    case '|':
-      ip.m_oDirection = (val) ? InstructionPointer::ms_koDirectionUp : InstructionPointer::ms_koDirectionDown;
+      m_oInstructionPointer.m_oDirection = (val) ? InstructionPointer::ms_koDirectionUp : InstructionPointer::ms_koDirectionDown;
    }
 
    return true;
@@ -153,19 +152,19 @@ bool VirtualMachine::cmdRandomMovement(char /*c*/)
    switch (randDir)
    {
    case 0:
-      ip.m_oDirection = InstructionPointer::ms_koDirectionLeft;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionLeft;
       break;
 
    case 1:
-      ip.m_oDirection = InstructionPointer::ms_koDirectionRight;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionRight;
       break;
 
    case 2:
-      ip.m_oDirection = InstructionPointer::ms_koDirectionDown;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionDown;
       break;
 
    case 3:
-      ip.m_oDirection = InstructionPointer::ms_koDirectionUp;
+      m_oInstructionPointer.m_oDirection = InstructionPointer::ms_koDirectionUp;
    }
 
    return true;
@@ -173,29 +172,29 @@ bool VirtualMachine::cmdRandomMovement(char /*c*/)
 
 bool VirtualMachine::cmdMath(char c)
 {
-   Stack::ValueType b = stack->pop();
-   Stack::ValueType a = stack->pop();
+   Stack::ValueType b = m_oStack.pop();
+   Stack::ValueType a = m_oStack.pop();
 
    switch (c)
    {
    case '+':
-      stack->push(a + b);
+      m_oStack.push(a + b);
       break;
 
    case '-':
-      stack->push(a - b);
+      m_oStack.push(a - b);
       break;
 
    case '*':
-      stack->push(a * b);
+      m_oStack.push(a * b);
       break;
 
    case '/':
-      stack->push(a / b);
+      m_oStack.push(a / b);
       break;
 
    case '%':
-      stack->push(a % b);
+      m_oStack.push(a % b);
    }
 
    return true;
@@ -206,11 +205,11 @@ bool VirtualMachine::cmdLogical(char c)
    switch (c)
    {
    case '!':
-      stack->push(!(stack->pop()));
+      m_oStack.push(!(m_oStack.pop()));
       break;
 
    case '`':
-      stack->push(stack->pop() < stack->pop());
+      m_oStack.push(m_oStack.pop() < m_oStack.pop());
    }
 
    return true;
@@ -222,25 +221,25 @@ bool VirtualMachine::cmdStackManipulation(char c)
    {
    case ':':
    {
-      Stack::ValueType val = stack->pop();
+      Stack::ValueType val = m_oStack.pop();
 
-      stack->push(val);
-      stack->push(val);
+      m_oStack.push(val);
+      m_oStack.push(val);
    }
       break;
 
    case '\\':
    {
-      Stack::ValueType a = stack->pop();
-      Stack::ValueType b = stack->pop();
+      Stack::ValueType a = m_oStack.pop();
+      Stack::ValueType b = m_oStack.pop();
 
-      stack->push(a);
-      stack->push(b);
+      m_oStack.push(a);
+      m_oStack.push(b);
    }
       break;
 
    case '$':
-      stack->pop();
+      m_oStack.pop();
    }
 
    return true;
@@ -248,7 +247,7 @@ bool VirtualMachine::cmdStackManipulation(char c)
 
 bool VirtualMachine::cmdOutput(char c)
 {
-   Stack::ValueType val = stack->pop();
+   Stack::ValueType val = m_oStack.pop();
 
    switch (c)
    {
@@ -278,12 +277,12 @@ bool VirtualMachine::cmdInput(char c)
       Stack::ValueType val;
       ss >> val;
 
-      stack->push(val);
+      m_oStack.push(val);
    }
       break;
 
    case '~':
-      stack->push(std::getchar());
+      m_oStack.push(std::getchar());
    }
 
    return true;
@@ -291,24 +290,24 @@ bool VirtualMachine::cmdInput(char c)
 
 bool VirtualMachine::cmdSkip(char /*c*/)
 {
-   ip.advance();
+   m_oInstructionPointer.advance();
 
    return true;
 }
 
 bool VirtualMachine::cmdCodeManipulation(char c)
 {
-   Stack::ValueType y = stack->pop();
-   Stack::ValueType x = stack->pop();
+   Stack::ValueType y = m_oStack.pop();
+   Stack::ValueType x = m_oStack.pop();
 
    switch (c)
    {
    case 'g':
-      stack->push(getCmdAt(static_cast<std::uint16_t>(x), static_cast<std::uint16_t>(y)));
+      m_oStack.push(getCmdAt({static_cast<InstructionPointer::VectorType::ValueType>(x), static_cast<InstructionPointer::VectorType::ValueType>(y)}));
       break;
 
    case 'p':
-      setCmdAt(static_cast<std::uint16_t>(x), static_cast<std::uint16_t>(y), static_cast<char>(stack->pop()));
+      setCmdAt({static_cast<InstructionPointer::VectorType::ValueType>(x), static_cast<InstructionPointer::VectorType::ValueType>(y)}, static_cast<char>(m_oStack.pop()));
    }
 
    return true;
@@ -317,12 +316,12 @@ bool VirtualMachine::cmdCodeManipulation(char c)
 bool VirtualMachine::cmdDigits(char c)
 {
    if (std::isdigit(c))
-      stack->push(Stack::ValueType(c - '0'));
+      m_oStack.push(Stack::ValueType(c - '0'));
 
    return true;
 }
 
-void VirtualMachine::loadCode(const std::string& filename)
+void VirtualMachine::loadCode(const std::string& rksFilename)
 {
    std::ifstream file;
    std::uint16_t x;
@@ -330,20 +329,20 @@ void VirtualMachine::loadCode(const std::string& filename)
    char cmd;
    bool done = false;
 
-   file.open(filename.c_str());
+   file.open(rksFilename.c_str());
 
-   for (y = 0; y < CODE_HEIGHT; ++y)
-      for (x = 0; x < CODE_WIDTH; ++x)
-         setCmdAt(x, y, ' ');
+   for (y = 0; y < ms_ki16CodeHeight; ++y)
+      for (x = 0; x < ms_ki16CodeWidth; ++x)
+         setCmdAt({x, y}, ' ');
 
-   for (y = 0; y < CODE_HEIGHT; ++y)
+   for (y = 0; y < ms_ki16CodeHeight; ++y)
    {
-      for (x = 0; x < CODE_WIDTH; ++x)
+      for (x = 0; x < ms_ki16CodeWidth; ++x)
       {
          if (file.get(cmd))
          {
             if (cmd != '\n')
-               setCmdAt(x, y, cmd);
+               setCmdAt({x, y}, cmd);
             else
                break;
          }
@@ -365,7 +364,7 @@ std::int32_t VirtualMachine::run()
 {
    char cmd = ' ';
    char prevCmd;
-   std::map<char, funcP>::iterator cmdIt;
+   std::map<char, CommandFunction>::iterator cmdIt;
    bool proceed;
    bool doLog = true;
    std::int32_t result = 0;
@@ -376,28 +375,28 @@ std::int32_t VirtualMachine::run()
    for (;;)
    {
       prevCmd = cmd;
-      cmd = getCmdAt(ip.m_oPosition.x, ip.m_oPosition.y);
+      cmd = getCmdAt(m_oInstructionPointer.m_oPosition);
 
       if (doLog && logfile.is_open())
       {
          if ( /*cmd != prev_cmd &&*/ cmd != ' ')
-            logfile << cmd << " pos: " << ip.m_oPosition.x << "," << ip.m_oPosition.y << " dir: " << ip.m_oDirection.x << "," << ip.m_oDirection.y << std::endl;
+            logfile << cmd << " pos: " << m_oInstructionPointer.m_oPosition.x << "," << m_oInstructionPointer.m_oPosition.y << " dir: " << m_oInstructionPointer.m_oDirection.x << "," << m_oInstructionPointer.m_oDirection.y << std::endl;
       }
 
       proceed = true;
 
       if (cmd == '"')
-         stringMode = !stringMode;
-      else if (stringMode)
-         stack->push(cmd);
+         m_bStringMode = !m_bStringMode;
+      else if (m_bStringMode)
+         m_oStack.push(cmd);
       else if (cmd == '@')
          break;
       else
-         if ((cmdIt = execute.find(cmd)) != execute.end())
+         if ((cmdIt = m_aCommands.find(cmd)) != m_aCommands.end())
             proceed = (this->*cmdIt->second)(cmd);
 
       if (proceed)
-         ip.advance();
+         m_oInstructionPointer.advance();
    }
 
    logfile.close();
@@ -405,12 +404,12 @@ std::int32_t VirtualMachine::run()
    return result;
 }
 
-char VirtualMachine::getCmdAt(std::uint16_t x, std::uint16_t y)
+char VirtualMachine::getCmdAt(const InstructionPointer::VectorType& rkoPosition)
 {
-   return code[x][y];
+   return code[rkoPosition.x][rkoPosition.y];
 }
 
-void VirtualMachine::setCmdAt(std::uint16_t x, std::uint16_t y, char c)
+void VirtualMachine::setCmdAt(const InstructionPointer::VectorType& rkoPosition, char c)
 {
-   code[x][y] = c;
+   code[rkoPosition.x][rkoPosition.y] = c;
 }
