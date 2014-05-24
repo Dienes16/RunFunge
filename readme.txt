@@ -1,9 +1,6 @@
-Usage: RunFunge.exe <file> [-bf93]
+﻿Usage: RunFunge.exe <file> [-bf93]
 
 -bf93 deactivates all extensions
-
-Note: In extended mode, there are two separate stacks to operate on. See "s" command for swapping them.
-
 
 Befunge-93 Commands:
 
@@ -49,10 +46,8 @@ r	Conditional Move Right: Pops a value, if it is 0, behave like >, otherwise kee
 t	Turn Around: Move to opposite direction
 w	Compare: Pops B and A, acts like [ if A < B, acts like ] if A > B, keep direction if a = b (borrowed from Funge-98)
 c	Clear: Clears the whole stack
-§	Constant Random: When IP reaches a '§', it is randomly replaced by either <, >, ^, or v
-s	Swap Stack: Switches the active stack (there are 2 stacks)
+§	Constant Random: When IP reaches a §, it is randomly replaced by either <, >, ^, or v
 S	Stack Size: Pushes the number of elements in the stack (not counting the new one it pushes)
-;	Swap Stack Top: Pops a value from the active stack and pushes it on the inactive stack
 x	Save Coordinates: Puts current X and Y position on the stack
 {	Call Sub Routine: Pops Y and X and moves IP to X/Y keeping direction
 	(next step is interpretation of the command at X/Y)
