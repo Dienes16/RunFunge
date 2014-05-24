@@ -124,6 +124,9 @@
     <ClCompile Include="VirtualMachine.cpp" />
     <ClCompile Include="VirtualMachineEx.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Stack.ipp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -188,7 +188,7 @@ bool VirtualMachineEx::cmdMoveTo(char /*c*/)
 
 bool VirtualMachineEx::cmdStackSize(char /*c*/)
 {
-   m_oStack.push(decltype(m_oStack)::ValueType(m_oStack.size()));
+   m_oStack.push(decltype(m_oStack)::ValueType(m_oStack.getSize()));
 
    return true;
 }
@@ -217,7 +217,7 @@ bool VirtualMachineEx::cmdSubRoutine(char c)
       break;
 
    case '}':
-      if (!callstack.empty())
+      if (!callstack.isEmpty())
       {
          m_oInstructionPointer = callstack.pop();
       }
