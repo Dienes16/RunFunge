@@ -117,12 +117,12 @@ bool VirtualMachineEx::cmdConditionalMovementEx(char c)
 
 bool VirtualMachineEx::cmdConditionalMovementCompare(char /*c*/)
 {
-   decltype(m_oStack)::ValueType b = m_oStack.pop();
-   decltype(m_oStack)::ValueType a = m_oStack.pop();
+   StackValueType xB = m_oStack.pop();
+   StackValueType xA = m_oStack.pop();
 
-   if (a < b)
+   if (xA < xB)
       return cmdTurn('[');
-   else if (a > b)
+   else if (xA > xB)
       return cmdTurn(']');
    else
       return true;
@@ -130,9 +130,9 @@ bool VirtualMachineEx::cmdConditionalMovementCompare(char /*c*/)
 
 bool VirtualMachineEx::cmdConstantRandomMovement(char /*c*/)
 {
-   std::uint16_t randDir = std::rand() % 4;
+   int iRandomDirection = std::rand() % 4;
 
-   switch (randDir)
+   switch (iRandomDirection)
    {
    case 0:
       setCmdAt(m_oInstructionPointer.m_oPosition, '<');
@@ -155,17 +155,18 @@ bool VirtualMachineEx::cmdConstantRandomMovement(char /*c*/)
 
 bool VirtualMachineEx::cmdTurn(char c)
 {
-   Vector<std::int16_t> oldDir = m_oInstructionPointer.m_oDirection;
+   InstructionPointer::DirectionVectorType oPrevDir = m_oInstructionPointer.m_oDirection;
 
-   if (c == '[')
+   switch (c)
    {
-      m_oInstructionPointer.m_oDirection.x =  oldDir.y;
-      m_oInstructionPointer.m_oDirection.y = -oldDir.x;
-   }
-   else if (c == ']')
-   {
-      m_oInstructionPointer.m_oDirection.x = -oldDir.y;
-      m_oInstructionPointer.m_oDirection.y =  oldDir.x;
+   case '[':
+      m_oInstructionPointer.m_oDirection.x =  oPrevDir.y;
+      m_oInstructionPointer.m_oDirection.y = -oPrevDir.x;
+      break;
+
+   case ']':
+      m_oInstructionPointer.m_oDirection.x = -oPrevDir.y;
+      m_oInstructionPointer.m_oDirection.y =  oPrevDir.x;
    }
 
    return true;
@@ -180,64 +181,62 @@ bool VirtualMachineEx::cmdTurnAround(char /*c*/)
 
 bool VirtualMachineEx::cmdMoveTo(char /*c*/)
 {
-   m_oInstructionPointer.m_oPosition.y = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
-   m_oInstructionPointer.m_oPosition.x = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
+   m_oInstructionPointer.m_oPosition.y = m_oStack.pop<InstructionPointer::PositionVectorType::ValueType>();
+   m_oInstructionPointer.m_oPosition.x = m_oStack.pop<InstructionPointer::PositionVectorType::ValueType>();
 
    return false;
 }
 
 bool VirtualMachineEx::cmdStackSize(char /*c*/)
 {
-   m_oStack.push(decltype(m_oStack)::ValueType(m_oStack.getSize()));
+   m_oStack.push(static_cast<StackValueType>(m_oStack.getSize()));
 
    return true;
 }
 
 bool VirtualMachineEx::cmdDigitsHex(char c)
 {
-   m_oStack.push(decltype(m_oStack)::ValueType(c - 'A' + 10));
+   m_oStack.push(static_cast<StackValueType>(c - 'A' + 10));
 
    return true;
 }
 
 bool VirtualMachineEx::cmdSubRoutine(char c)
 {
-   bool proceed = true;
+   bool bProceed = true;
 
    switch (c)
    {
    case '{':
-      callstack.push(m_oInstructionPointer);
+      m_oCallstack.push(m_oInstructionPointer);
 
-      m_oInstructionPointer.m_oPosition.y = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
-      m_oInstructionPointer.m_oPosition.x = m_oStack.pop<InstructionPointer::VectorType::ValueType>();
+      m_oInstructionPointer.m_oPosition.y = m_oStack.pop<InstructionPointer::PositionVectorType::ValueType>();
+      m_oInstructionPointer.m_oPosition.x = m_oStack.pop<InstructionPointer::PositionVectorType::ValueType>();
 
-      proceed = false;
+      bProceed = false;
 
       break;
 
    case '}':
-      if (!callstack.isEmpty())
-      {
-         m_oInstructionPointer = callstack.pop();
-      }
+      if (!m_oCallstack.isEmpty())
+         m_oInstructionPointer = m_oCallstack.pop();
    }
 
-   return proceed;
+   return bProceed;
 }
 
 bool VirtualMachineEx::cmdExecute(char /*c*/)
 {
-   std::string cmd = m_oStack.popString();
+   std::string sCommand = m_oStack.popString();
 
-   m_oStack.push(decltype(m_oStack)::ValueType(std::system(cmd.c_str())));
+   m_oStack.push(StackValueType(std::system(sCommand.c_str())));
 
    return true;
 }
 
-std::int32_t VirtualMachineEx::run()
+int VirtualMachineEx::run()
 {
    VirtualMachine::run();
 
-   return m_oStack.pop<std::int32_t>();
+   return m_oStack.pop<int>();
 }
