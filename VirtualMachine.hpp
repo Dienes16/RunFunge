@@ -34,15 +34,15 @@ public:
    using StackValueType = std::int64_t;
 
 protected:
-   template<typename T>
+   template<typename ValueT>
    class Vector
    {
    public:
-      using ValueType = T;
+      using ValueType = ValueT;
 
    public:
-      T x;
-      T y;
+      ValueT x;
+      ValueT y;
 
    public:
       inline Vector& operator=(const Vector& rkoOther)
@@ -55,8 +55,8 @@ protected:
 
       inline Vector& operator=(Vector&& rroOther)
       {
-         x = rroOther.x;
-         y = rroOther.y;
+         x = std::move(rroOther.x);
+         y = std::move(rroOther.y);
 
          return *this;
       }
@@ -113,12 +113,13 @@ protected:
    };
 
 protected:
-   static const std::int16_t ms_ki16CodeWidth = 80, ms_ki16CodeHeight = 25;
+   static const std::int16_t ms_ki16CodeWidth  = 80;
+   static const std::int16_t ms_ki16CodeHeight = 25;
 
-   std::array<std::array<char, ms_ki16CodeHeight>, ms_ki16CodeWidth> code;
+   std::array<std::array<char, ms_ki16CodeHeight>, ms_ki16CodeWidth> m_acCode;
 
 protected:
-   using CommandFunction = bool(VirtualMachine::*)(char);
+   using CommandFunction = bool (VirtualMachine::*)(char);
 
    bool cmdMovement(char c);
    bool cmdConditionalMovement(char c);
@@ -132,7 +133,7 @@ protected:
    bool cmdCodeManipulation(char c);
    bool cmdDigits(char c);
 
-   std::map<char, CommandFunction> m_aCommands;
+   std::map<char, CommandFunction> m_amfpCommands;
 
    Stack<StackValueType> m_oStack;
 
@@ -152,8 +153,8 @@ public:
    virtual int run();
 };
 
-template<typename T>
-inline VirtualMachine::Vector<T> operator+(const VirtualMachine::Vector<T>& rkoLhs, const VirtualMachine::Vector<T>& rkoRhs)
+template<typename ValueT>
+inline VirtualMachine::Vector<ValueT> operator+(const VirtualMachine::Vector<ValueT>& rkoLhs, const VirtualMachine::Vector<ValueT>& rkoRhs)
 {
    return
    {
@@ -162,8 +163,8 @@ inline VirtualMachine::Vector<T> operator+(const VirtualMachine::Vector<T>& rkoL
    };
 }
 
-template<typename T>
-inline VirtualMachine::Vector<T> operator-(const VirtualMachine::Vector<T>& rkoLhs, const VirtualMachine::Vector<T>& rkoRhs)
+template<typename ValueT>
+inline VirtualMachine::Vector<ValueT> operator-(const VirtualMachine::Vector<ValueT>& rkoLhs, const VirtualMachine::Vector<ValueT>& rkoRhs)
 {
    return
    {

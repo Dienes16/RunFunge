@@ -23,30 +23,30 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 namespace rf
 {
-template<typename T>
-inline void Stack<T>::push(const T& rkxValue)
+template<typename ValueT>
+inline void Stack<ValueT>::push(const ValueT& rkxValue)
 {
    m_oStack.push(rkxValue);
 }
 
-template<typename T>
-template<typename U>
-U Stack<T>::pop()
+template<typename ValueT>
+template<typename ValueU>
+ValueU Stack<ValueT>::pop()
 {
-   static_assert(std::is_convertible<T, U>::value, "T is not convertible to U");
+   static_assert(std::is_convertible<ValueT, ValueU>::value, "ValueT is not convertible to ValueU");
 
    if (m_oStack.empty())
       return {};
 
-   T xResult = m_oStack.top();
+   ValueT xResult = m_oStack.top();
 
    m_oStack.pop();
 
-   return static_cast<U>(xResult);
+   return static_cast<ValueU>(xResult);
 }
 
-template<typename T>
-std::string Stack<T>::popString()
+template<typename ValueT>
+std::string Stack<ValueT>::popString()
 {
    std::string sString;
 
@@ -58,21 +58,21 @@ std::string Stack<T>::popString()
    return sString;
 }
 
-template<typename T>
-inline bool Stack<T>::isEmpty()
+template<typename ValueT>
+inline bool Stack<ValueT>::isEmpty() const
 {
    return m_oStack.empty();
 }
 
-template<typename T>
-inline void Stack<T>::clear()
+template<typename ValueT>
+inline void Stack<ValueT>::clear()
 {
    while (m_oStack.empty() == false)
       m_oStack.pop();
 }
 
-template<typename T>
-inline std::uint32_t Stack<T>::getSize()
+template<typename ValueT>
+inline std::uint32_t Stack<ValueT>::getSize() const
 {
    return static_cast<std::uint32_t>(m_oStack.size());
 }

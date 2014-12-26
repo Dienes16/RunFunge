@@ -29,7 +29,7 @@ namespace rf
 VirtualMachineEx::VirtualMachineEx()
    : VirtualMachine()
 {
-#define MAP_COMMAND(CMD, FUNC) m_aCommands[CMD] = static_cast<CommandFunction>(&VirtualMachineEx::FUNC)
+#define MAP_COMMAND(CMD, FUNC) m_amfpCommands[CMD] = static_cast<CommandFunction>(&VirtualMachineEx::FUNC)
 
    MAP_COMMAND('c', cmdClearStack);
    MAP_COMMAND('x', cmdCoords);

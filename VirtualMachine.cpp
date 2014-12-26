@@ -51,7 +51,7 @@ VirtualMachine::VirtualMachine()
 {
    std::srand(static_cast<unsigned int>(std::time(NULL)));
 
-#define MAP_COMMAND(CMD, FUNC) m_aCommands[CMD] = &VirtualMachine::FUNC
+#define MAP_COMMAND(CMD, FUNC) m_amfpCommands[CMD] = &VirtualMachine::FUNC
 
    MAP_COMMAND('<', cmdMovement);
    MAP_COMMAND('>', cmdMovement);
@@ -387,7 +387,7 @@ int VirtualMachine::run()
       {
          std::map<char, CommandFunction>::iterator cmdIt;
 
-         if ((cmdIt = m_aCommands.find(cCmd)) != m_aCommands.end())
+         if ((cmdIt = m_amfpCommands.find(cCmd)) != m_amfpCommands.end())
             bProceed = (this->*cmdIt->second)(cCmd);
       }
 
@@ -402,11 +402,11 @@ int VirtualMachine::run()
 
 char VirtualMachine::getCmdAt(const InstructionPointer::PositionVectorType& rkoPosition)
 {
-   return code[rkoPosition.x][rkoPosition.y];
+   return m_acCode[rkoPosition.x][rkoPosition.y];
 }
 
 void VirtualMachine::setCmdAt(const InstructionPointer::PositionVectorType& rkoPosition, char c)
 {
-   code[rkoPosition.x][rkoPosition.y] = c;
+   m_acCode[rkoPosition.x][rkoPosition.y] = c;
 }
 } // namespace rf
