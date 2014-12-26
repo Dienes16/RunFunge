@@ -25,28 +25,28 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 namespace rf
 {
-template<typename T>
+template<typename ValueT>
 class Stack final
 {
 public:
-   using ValueType = T;
+   using ValueType = ValueT;
 
 private:
-   std::stack<ValueType> m_oStack;
+   std::stack<ValueT> m_oStack;
 
 public:
-   inline void push(const T& rkxValue);
+   inline void push(const ValueT& rkxValue);
    
-   template<typename U = T>
-   U pop();
+   template<typename ValueU = ValueT>
+   ValueU pop();
 
    std::string popString();
 
-   inline bool isEmpty();
+   inline bool isEmpty() const;
 
    inline void clear();
 
-   inline std::uint32_t getSize();
+   inline std::uint32_t getSize() const;
 };
 } // namespace rf
 

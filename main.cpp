@@ -23,7 +23,7 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include "VirtualMachineEx.hpp"
 
-int main(int iArgCount, char **ppcArgValues)
+int main(int iArgCount, char **asz8ArgValues)
 {
    if (iArgCount <= 1)
    {
@@ -31,14 +31,29 @@ int main(int iArgCount, char **ppcArgValues)
       return EXIT_FAILURE;
    }
 
-   std::unique_ptr<rf::VirtualMachine> upoVirtualMachine;
+   const std::string ksScriptFilename = asz8ArgValues[1];
 
-   if (iArgCount > 2 && !std::strcmp(ppcArgValues[2], "-bf93"))
-      upoVirtualMachine = std::make_unique<rf::VirtualMachine>();
-   else
-      upoVirtualMachine = std::make_unique<rf::VirtualMachineEx>();
+   enum class Mode
+   {
+      BF93,
+      EXT
+   };
 
-   upoVirtualMachine->loadCode(ppcArgValues[1]);
+   Mode eMode = Mode::EXT;
 
-   return upoVirtualMachine->run();
+   if (iArgCount > 2)
+   {
+      if (std::strcmp(asz8ArgValues[2], "-bf93") == false)
+      {
+         eMode = Mode::BF93;
+      }
+   }   
+
+   const std::unique_ptr<rf::VirtualMachine> kupoVirtualMachine =
+      (eMode == Mode::BF93) ? std::make_unique<rf::VirtualMachine  >()
+                            : std::make_unique<rf::VirtualMachineEx>();
+
+   kupoVirtualMachine->loadCode(ksScriptFilename);
+
+   return kupoVirtualMachine->run();
 }
