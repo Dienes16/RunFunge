@@ -27,6 +27,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <string>
 #include <cstdint>
 
+namespace rf
+{
 template<typename T>
 class Stack final
 {
@@ -50,6 +52,7 @@ public:
 
    inline std::uint32_t getSize();
 };
+} // namespace rf
 
 #ifndef STACK_HPP_NOIMPL
 #   include "Stack.ipp"

@@ -28,6 +28,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <fstream>
 #include <cctype>
 
+namespace rf
+{
 const VirtualMachine::InstructionPointer::DirectionVectorType VirtualMachine::InstructionPointer::ms_koDirectionUp   { 0, -1};
 const VirtualMachine::InstructionPointer::DirectionVectorType VirtualMachine::InstructionPointer::ms_koDirectionDown { 0,  1};
 const VirtualMachine::InstructionPointer::DirectionVectorType VirtualMachine::InstructionPointer::ms_koDirectionLeft {-1,  0};
@@ -411,3 +413,4 @@ void VirtualMachine::setCmdAt(const InstructionPointer::PositionVectorType& rkoP
 {
    code[rkoPosition.x][rkoPosition.y] = c;
 }
+} // namespace rf
