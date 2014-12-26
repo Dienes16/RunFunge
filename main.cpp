@@ -35,12 +35,12 @@ int main(int iArgCount, char **ppcArgValues)
       return EXIT_FAILURE;
    }
 
-   std::unique_ptr<VirtualMachine> upoVirtualMachine;
+   std::unique_ptr<rf::VirtualMachine> upoVirtualMachine;
 
    if (iArgCount > 2 && !std::strcmp(ppcArgValues[2], "-bf93"))
-      upoVirtualMachine = std::make_unique<VirtualMachine>();
+      upoVirtualMachine = std::make_unique<rf::VirtualMachine>();
    else
-      upoVirtualMachine = std::make_unique<VirtualMachineEx>();
+      upoVirtualMachine = std::make_unique<rf::VirtualMachineEx>();
 
    upoVirtualMachine->loadCode(ppcArgValues[1]);
 

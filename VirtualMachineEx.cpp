@@ -28,6 +28,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 #include <fstream>
 #include <cctype>
 
+namespace rf
+{
 VirtualMachineEx::VirtualMachineEx()
    : VirtualMachine()
 {
@@ -240,3 +242,4 @@ int VirtualMachineEx::run()
 
    return m_oStack.pop<int>();
 }
+} // namespace rf

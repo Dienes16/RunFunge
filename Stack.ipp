@@ -25,6 +25,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include <type_traits>
 
+namespace rf
+{
 template<typename T>
 inline void Stack<T>::push(const T& rkxValue)
 {
@@ -78,5 +80,6 @@ inline std::uint32_t Stack<T>::getSize()
 {
    return static_cast<std::uint32_t>(m_oStack.size());
 }
+} // namespace rf
 
 #endif // STACK_IPP

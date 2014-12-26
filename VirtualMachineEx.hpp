@@ -29,6 +29,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include <cstdint>
 
+namespace rf
+{
 class VirtualMachineEx: public VirtualMachine
 {
 protected:
@@ -53,5 +55,6 @@ public:
 
    int run();
 };
+} // namespace rf
 
 #endif // VIRTUALMACHINEEX_HPP

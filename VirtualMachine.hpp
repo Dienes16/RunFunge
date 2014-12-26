@@ -30,6 +30,8 @@ Author E-Mail: dienes16 [at] googlemail [dot] com
 
 #include "Stack.hpp"
 
+namespace rf
+{
 class VirtualMachine
 {
 public:
@@ -173,5 +175,6 @@ inline VirtualMachine::Vector<T> operator-(const VirtualMachine::Vector<T>& rkoL
       , rkoLhs.y - rkoRhs.y
    };
 }
+} // namespace rf
 
 #endif // VIRTUALMACHINE_HPP
