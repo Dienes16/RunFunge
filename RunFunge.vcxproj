@@ -121,11 +121,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="VirtualMachine.cpp" />
-    <ClCompile Include="VirtualMachineEx.cpp" />
+    <ClCompile Include="VirtualMachine.cpp">
+      <DependentUpon>VirtualMachine.hpp</DependentUpon>
+    </ClCompile>
+    <ClCompile Include="VirtualMachineEx.cpp">
+      <DependentUpon>VirtualMachineEx.hpp</DependentUpon>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Stack.ipp" />
+    <None Include="Stack.ipp">
+      <DependentUpon>Stack.hpp</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
